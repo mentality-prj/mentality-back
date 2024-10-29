@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+
 import { ArticlesController } from './articles.controller';
 import { Article, ArticleSchema } from './schemas/article.schema';
 import { OpenaiService } from '../openai/openai.service';

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { OpenaiService } from 'src/openai/openai.service';
+
 import { ArticlesController } from './articles.controller';
 import { Article, ArticleSchema } from './schemas/article.schema';
-import { OpenaiService } from '../openai/openai.service';
 
 @Module({
   imports: [

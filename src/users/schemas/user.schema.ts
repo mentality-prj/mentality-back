@@ -6,7 +6,7 @@ export class User extends Document {
   @Prop({ required: true })
   googleId: string;
 
-  @Prop({ required: true })
+  @Prop({ unique: true, required: true })
   email: string;
 
   @Prop()

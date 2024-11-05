@@ -3,13 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { mockUserModel } from './__mock__';
 import { User } from './schemas/user.schema';
+import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
-describe('UsersService', () => {
-  let service: UsersService;
+describe('UsersController', () => {
+  let controller: UsersController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
       providers: [
         UsersService,
         {
@@ -19,10 +21,10 @@ describe('UsersService', () => {
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    controller = module.get<UsersController>(UsersController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 });

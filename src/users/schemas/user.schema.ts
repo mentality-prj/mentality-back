@@ -1,26 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-enum ProviderType {
+export enum ProviderType {
   GOOGLE = 'google',
   GITHUB = 'github',
 }
 
 @Schema()
 export class User extends Document {
-  @Prop({
-    type: {
-      type: String,
-      enum: ProviderType,
-      required: true,
-    },
-    id: { type: String, required: true },
-  })
-  provider: {
-    type: ProviderType;
-    id: string;
-  };
-
   @Prop({ unique: true, required: true })
   email: string;
 
@@ -29,6 +16,19 @@ export class User extends Document {
 
   @Prop()
   avatarUrl?: string;
+
+  @Prop({
+    type: {
+      type: String,
+      enum: ProviderType,
+      required: true,
+    },
+    id: { type: String, required: true },
+  })
+  provider?: {
+    type: ProviderType;
+    id: string;
+  };
 
   @Prop({ default: Date.now })
   createdAt: Date;

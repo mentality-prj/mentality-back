@@ -2,7 +2,7 @@ import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import axios from 'axios';
 import { OAuth2Client } from 'google-auth-library';
 
-import { ProviderType } from 'src/users/schemas/user.schema';
+import { ProviderType, UserRole } from 'src/users/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
@@ -22,6 +22,7 @@ export class AuthController {
       let email: string | null = null;
       let name: string | null = null;
       let avatarUrl: string | null = null;
+      const role: UserRole = 'user';
       let providerID: string | null = null;
 
       if (provider === 'google') {
@@ -55,16 +56,23 @@ export class AuthController {
         throw new UnauthorizedException('Email not provided by OAuth provider');
       }
 
+      const providers = [
+        {
+          type: provider,
+          id: providerID,
+        },
+      ];
+
       // Find or create user in the database
       const user = await this.usersService.findOrCreateUser(
         email,
         name,
         avatarUrl,
-        {
-          type: provider,
-          id: providerID,
-        },
+        role,
+        providers,
       );
+
+      console.log('Token validation successful!');
 
       return user;
     } catch (error) {

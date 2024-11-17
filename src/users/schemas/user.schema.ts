@@ -6,6 +6,13 @@ export enum ProviderType {
   GITHUB = 'github',
 }
 
+export type UserRole = 'admin' | 'user';
+
+export interface Provider {
+  type: ProviderType;
+  id: string;
+}
+
 @Schema()
 export class User extends Document {
   @Prop({ unique: true, required: true })
@@ -17,18 +24,11 @@ export class User extends Document {
   @Prop()
   avatarUrl?: string;
 
-  @Prop({
-    type: {
-      type: String,
-      enum: ProviderType,
-      required: true,
-    },
-    id: { type: String, required: true },
-  })
-  provider?: {
-    type: ProviderType;
-    id: string;
-  };
+  @Prop({ required: true })
+  role: UserRole;
+
+  @Prop({ type: [{ type: { type: String, enum: ProviderType }, id: String }] })
+  providers: Provider[];
 
   @Prop({ default: Date.now })
   createdAt: Date;

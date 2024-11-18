@@ -27,7 +27,15 @@ export class User extends Document {
   @Prop({ required: true })
   role: UserRole;
 
-  @Prop({ type: [{ type: { type: String, enum: ProviderType }, id: String }] })
+  @Prop({
+    type: [
+      {
+        type: { type: String, enum: ProviderType, required: true },
+        id: { type: String, required: true },
+      },
+    ],
+    default: [],
+  })
   providers: Provider[];
 
   @Prop({ default: Date.now })

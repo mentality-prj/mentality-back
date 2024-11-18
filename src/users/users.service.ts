@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { ProviderType, User, UserRole } from './schemas/user.schema';
+import { Provider, User, UserRole } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -13,27 +13,37 @@ export class UsersService {
     name?: string,
     avatarUrl?: string,
     role: UserRole = 'user',
-    providers?: {
-      type: ProviderType;
-      id: string;
-    }[],
+    providers: Provider[] = [],
   ): Promise<User> {
     let user = await this.userModel.findOne({ email });
     if (!user) {
       user = new this.userModel({ email, name, avatarUrl, role, providers });
       await user.save();
     } else {
+      let updated = false;
+
       // If the user exists, add a new provider if it does not exist
       for (const provider of providers) {
-        if (
-          !user.providers.some(
-            (p) => p.type === provider.type && p.id === provider.id,
-          )
-        ) {
+        const existingProvider = user.providers.find(
+          (p) => p.type === provider.type,
+        );
+
+        if (existingProvider) {
+          // If a provider with this type already exists, update its id
+          if (existingProvider.id !== provider.id) {
+            existingProvider.id = provider.id;
+            updated = true;
+          }
+        } else {
+          // If there is no provider with this type, add a new one
           user.providers.push(provider);
+          updated = true;
         }
       }
-      await user.save();
+
+      if (updated) {
+        await user.save();
+      }
     }
     return user;
   }

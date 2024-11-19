@@ -5,12 +5,18 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'prettier', 'import'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'prettier',
+    'import',
+    'security',
+  ],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
+    'plugin:security/recommended-legacy',
   ],
   root: true,
   env: {
@@ -30,6 +36,24 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-floating-promises': 'error',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        args: 'all',
+        argsIgnorePattern: '^_',
+        caughtErrors: 'all',
+        caughtErrorsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+      },
+    ],
+    'consistent-return': 'error',
+    'no-eval': 'error',
+    'no-implied-eval': 'error',
+    'no-magic-numbers': ['warn', { ignore: [0, 1] }],
+    'security/detect-object-injection': 'warn',
     'sort-imports': [
       'error',
       {

@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArticlesController } from './articles/articles.controller';
 import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
 import { OpenaiService } from './openai/openai.service';
 import { Tag, TagSchema } from './tags/schemas/tag.schema';
 import { TagsModule } from './tags/tags.module';
@@ -28,6 +29,7 @@ import { UsersService } from './users/users.service';
       { name: User.name, schema: UserSchema },
       { name: Tag.name, schema: TagSchema },
     ]),
+    AuthModule,
     UsersModule,
     TagsModule,
   ],

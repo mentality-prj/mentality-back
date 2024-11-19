@@ -16,7 +16,7 @@ async function bootstrap() {
       'Description of the documentation for the Mentality project',
     )
     .setVersion('1.0')
-    .addTag('API')
+    .addTag('AI API')
     .build();
   const document = SwaggerModule.createDocument(app, config);
 

@@ -1,9 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
 import { AppModule } from 'src/app.module';
-import { statusCodes } from 'src/constants';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -20,7 +19,7 @@ describe('AppController (e2e)', () => {
   it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
-      .expect(statusCodes.OK)
+      .expect(HttpStatus.OK)
       .expect('Hello My First Nest App!');
   });
 

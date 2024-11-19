@@ -14,11 +14,14 @@ export class UsersService {
     avatarUrl?: string,
     role: UserRole = 'user',
     providers: Provider[] = [],
-  ): Promise<User> {
+  ): Promise<{ user: User; isNewUser: boolean }> {
     let user = await this.userModel.findOne({ email });
+    let isNewUser = false;
+
     if (!user) {
       user = new this.userModel({ email, name, avatarUrl, role, providers });
       await user.save();
+      isNewUser = true;
     } else {
       let updated = false;
 
@@ -45,7 +48,7 @@ export class UsersService {
         await user.save();
       }
     }
-    return user;
+    return { user, isNewUser };
   }
 
   async getUserById(id: string): Promise<User> {

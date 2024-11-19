@@ -6,6 +6,8 @@ export enum ProviderType {
   GITHUB = 'github',
 }
 
+export type ProviderName = `${ProviderType}`;
+
 export type UserRole = 'admin' | 'user';
 
 export interface Provider {

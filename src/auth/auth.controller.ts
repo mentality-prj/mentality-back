@@ -1,8 +1,31 @@
-import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  ApiAcceptedResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import axios from 'axios';
+import { Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 
-import { ProviderType, UserRole } from 'src/users/schemas/user.schema';
+import { ValidateUserDto } from 'src/users/dto/validate-token-dto';
+import {
+  NewUserEntity,
+  UnauthorizedUser,
+  UserEntity,
+  ValidateUser,
+} from 'src/users/entities/user.entity';
+import { UserRole } from 'src/users/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('auth')
@@ -14,10 +37,33 @@ export class AuthController {
   }
 
   @Post('validate-token')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary:
+      'Verify users token. Find user by email or create new user in the database',
+  })
+  @ApiBody({
+    description: 'User token and OAuth provider',
+    type: ValidateUser,
+  })
+  @ApiAcceptedResponse({
+    description: 'Token accepted, user found',
+    type: UserEntity,
+  })
+  @ApiCreatedResponse({
+    description: 'Token accepted, user created',
+    type: NewUserEntity,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: UnauthorizedUser,
+  })
   async validateToken(
-    @Body('token') token: string,
-    @Body('provider') provider: ProviderType,
+    @Res() res: Response,
+    @Body() validateUserDto: ValidateUserDto,
   ) {
+    const { token, provider } = validateUserDto;
+
     try {
       let email: string | null = null;
       let name: string | null = null;
@@ -64,7 +110,7 @@ export class AuthController {
       ];
 
       // Find or create user in the database
-      const user = await this.usersService.findOrCreateUser(
+      const { user, isNewUser } = await this.usersService.findOrCreateUser(
         email,
         name,
         avatarUrl,
@@ -74,8 +120,14 @@ export class AuthController {
 
       console.log('Token validation successful!');
 
-      return user;
+      // statusCode: isNewUser ? HttpStatus.CREATED : HttpStatus.ACCEPTED,
+      if (isNewUser) {
+        res.status(HttpStatus.CREATED).json(user).send();
+      } else {
+        res.status(HttpStatus.ACCEPTED).json(user).send();
+      }
     } catch (error) {
+      // debt: add logger
       console.log('error', error);
       throw new UnauthorizedException('Token validation failed');
     }

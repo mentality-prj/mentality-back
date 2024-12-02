@@ -1,0 +1,7 @@
+npm test
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+yarn lint-staged --concurrent false
+yarn tsc --noEmit
+yarn test

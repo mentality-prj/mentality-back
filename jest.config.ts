@@ -11,7 +11,7 @@ export default {
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
   },
-  collectCoverageFrom: ['**/*.(t|j)s'],
+  collectCoverageFrom: ['src/**/*.(t|j)s'],
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
 };

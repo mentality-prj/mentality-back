@@ -1,3 +1,5 @@
+# Mentality Project: backend
+
 ## Description
 
 A progressive [Node.js](http://nodejs.org) framework for building efficient and scalable server-side applications. [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -7,7 +9,7 @@ You can view the live application at [mentality-back.onrender.com](mentality-bac
 ## Project setup
 
 ```bash
-$ yarn install
+yarn install
 ```
 
 ## Compile and run the project

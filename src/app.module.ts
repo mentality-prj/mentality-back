@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ArticlesService } from './articles/article.service';
 import { ArticlesController } from './articles/articles.controller';
+import { Article, ArticleSchema } from './articles/schemas/article.schema';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { UniqueFieldValue } from './helpers/interceptors/unique-field-value.interceptor';
 import { OpenaiService } from './openai/openai.service';
 import { Tag, TagSchema } from './tags/schemas/tag.schema';
 import { TagsModule } from './tags/tags.module';
@@ -16,7 +20,6 @@ import { User, UserSchema } from './users/schemas/user.schema';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -31,6 +34,7 @@ import { UsersService } from './users/users.service';
       { name: User.name, schema: UserSchema },
       { name: Tag.name, schema: TagSchema },
       { name: Tip.name, schema: TipSchema },
+      { name: Article.name, schema: ArticleSchema },
     ]),
     AuthModule,
     UsersModule,
@@ -43,6 +47,15 @@ import { UsersService } from './users/users.service';
     UsersController,
     ArticlesController,
   ],
-  providers: [AppService, OpenaiService, UsersService],
+  providers: [
+    AppService,
+    OpenaiService,
+    UsersService,
+    ArticlesService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: UniqueFieldValue,
+    },
+  ],
 })
 export class AppModule {}

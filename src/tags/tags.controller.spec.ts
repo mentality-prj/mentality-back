@@ -59,7 +59,7 @@ describe('TagsController', () => {
 
   describe('createTag', () => {
     it('should create a new tag', async () => {
-      const newTag = await controller.createTag('Gardening');
+      const newTag = await controller.createTag({ name: 'Gardening' });
       expect(newTag.name).toBe('Gardening');
       expect(service.createTag).toHaveBeenCalledWith('Gardening');
     });

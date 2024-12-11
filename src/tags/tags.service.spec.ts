@@ -1,6 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { SupportedLanguage } from './constants/supported-languages.constant';
 import { Tag } from './schemas/tag.schema';
 import { TagsService } from './tags.service';
 
@@ -12,26 +13,41 @@ describe('TagsService', () => {
       exec: jest.fn().mockResolvedValue([
         {
           _id: '1',
-          name: 'Cleaning',
+          key: 'cleaning',
+          translations: {
+            en: 'Cleaning',
+            uk: 'Прибирання',
+            pl: 'Sprzątanie',
+          },
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       ]),
     }),
-    findById: jest.fn((id) => ({
+    findById: jest.fn((id: string) => ({
       exec: jest.fn().mockResolvedValue({
         _id: id,
-        name: 'Cleaning',
+        key: 'cleaning',
+        translations: {
+          en: 'Cleaning',
+          uk: 'Прибирання',
+          pl: 'Sprzątanie',
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       }),
     })),
-    create: jest.fn((dto) => ({
-      _id: '2',
-      ...dto,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    })),
+    create: jest.fn(
+      (dto: {
+        key: string;
+        translations: Record<SupportedLanguage, string>;
+      }) => ({
+        _id: '2',
+        ...dto,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+    ),
   };
 
   beforeEach(async () => {
@@ -60,16 +76,27 @@ describe('TagsService', () => {
   describe('getTagById', () => {
     it('should return a tag by id', async () => {
       const tag = await service.getTagById('1');
-      expect(tag.name).toBe('Cleaning');
+      expect(tag.translations.en).toBe('Cleaning');
       expect(mockTagModel.findById).toHaveBeenCalledWith('1');
     });
   });
 
   describe('createTag', () => {
     it('should create a new tag', async () => {
-      const newTag = await service.createTag('Gardening');
-      expect(newTag.name).toBe('Gardening');
-      expect(mockTagModel.create).toHaveBeenCalledWith({ name: 'Gardening' });
+      const newTag = await service.createTag('gardening', {
+        en: 'Gardening',
+        uk: 'Садівництво',
+        pl: 'Ogrodnictwo',
+      });
+      expect(newTag.translations.en).toBe('Gardening');
+      expect(mockTagModel.create).toHaveBeenCalledWith({
+        key: 'gardening',
+        translations: {
+          en: 'Gardening',
+          uk: 'Садівництво',
+          pl: 'Ogrodnictwo',
+        },
+      });
     });
   });
 });

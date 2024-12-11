@@ -54,8 +54,11 @@ export class TagsController {
     description: 'Tag successfully created.',
     type: NewTagEntity,
   })
-  async createTag(@Body('name') name: string): Promise<TagEntity> {
-    return this.tagsService.createTag(name);
+  async createTag(
+    @Body('key') key: string,
+    @Body('translations') translations: Record<string, string>,
+  ): Promise<NewTagEntity> {
+    return this.tagsService.createTag(key, translations);
   }
 
   @Patch(':id')
@@ -68,8 +71,8 @@ export class TagsController {
   })
   async updateTag(
     @Param('id') id: string,
-    @Body('name') name: string,
+    @Body('translations') translations: Record<string, string>,
   ): Promise<TagEntity> {
-    return this.tagsService.updateTag(id, name);
+    return this.tagsService.updateTag(id, translations);
   }
 }

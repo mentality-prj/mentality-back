@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -24,12 +24,19 @@ export class TagsService {
     return TagsMapper.toTagEntity(tag);
   }
 
-  async createTag(
-    key: string,
-    translations: Record<SupportedLanguage, string>,
-  ): Promise<NewTagEntity> {
-    const newTag = await this.tagModel.create({ key, translations });
+  async createTag(name: string): Promise<NewTagEntity> {
+    const newTag = await this.tagModel.create({ name });
     return TagsMapper.toTagEntity(newTag);
+  }
+
+  async getTagsByIds(ids: string[]) {
+    const tags = await this.tagModel.find({ _id: { $in: ids } });
+
+    if (tags.length !== ids.length) {
+      throw new BadRequestException('Some tags not found!');
+    }
+
+    return tags;
   }
 
   async updateTag(

@@ -1,28 +1,44 @@
+import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { TagEntity } from './entities/tag.entity';
-import { TagsController } from './tags.controller';
+import { Tag } from './schemas/tag.schema';
 import { TagsService } from './tags.service';
 
-describe('TagsController', () => {
-  let controller: TagsController;
+describe('TagsService', () => {
   let service: TagsService;
 
-  const mockTags: TagEntity[] = [
-    {
-      id: '1',
-      name: 'Cleaning',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ];
-
-  const mockTagsService = {
-    getAllTags: jest.fn().mockResolvedValue(mockTags),
-    getTagById: jest.fn((id: string) => mockTags.find((tag) => tag.id === id)),
-    createTag: jest.fn((name: string) => ({
-      id: '2',
-      name,
+  const mockTagModel = {
+    find: jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue([
+        {
+          _id: '1',
+          key: 'cleaning',
+          translations: {
+            en: 'Cleaning',
+            uk: 'Прибирання',
+            pl: 'Sprzątanie',
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]),
+    }),
+    findById: jest.fn((id) => ({
+      exec: jest.fn().mockResolvedValue({
+        _id: id,
+        key: 'cleaning',
+        translations: {
+          en: 'Cleaning',
+          uk: 'Прибирання',
+          pl: 'Sprzątanie',
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+    })),
+    create: jest.fn((dto) => ({
+      _id: '2',
+      ...dto,
       createdAt: new Date(),
       updatedAt: new Date(),
     })),
@@ -30,38 +46,52 @@ describe('TagsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [TagsController],
-      providers: [{ provide: TagsService, useValue: mockTagsService }],
+      providers: [
+        TagsService,
+        { provide: getModelToken(Tag.name), useValue: mockTagModel },
+      ],
     }).compile();
 
-    controller = module.get<TagsController>(TagsController);
     service = module.get<TagsService>(TagsService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(service).toBeDefined();
   });
 
   describe('getAllTags', () => {
-    it('should return an array of tags', async () => {
-      expect(await controller.getAllTags()).toEqual(mockTags);
-      expect(service.getAllTags).toHaveBeenCalled();
+    it('should return all tags', async () => {
+      const tags = await service.getAllTags();
+      expect(tags).toHaveLength(1);
+      expect(mockTagModel.find).toHaveBeenCalled();
     });
   });
 
   describe('getTagById', () => {
     it('should return a tag by id', async () => {
-      const tag = await controller.getTagById('1');
-      expect(tag).toEqual(mockTags[0]);
-      expect(service.getTagById).toHaveBeenCalledWith('1');
+      const tag = await service.getTagById('1');
+      expect(tag.translations.en).toBe('Cleaning');
+      expect(mockTagModel.findById).toHaveBeenCalledWith('1');
     });
   });
 
   describe('createTag', () => {
     it('should create a new tag', async () => {
-      const newTag = await controller.createTag('Gardening');
-      expect(newTag.name).toBe('Gardening');
-      expect(service.createTag).toHaveBeenCalledWith('Gardening');
+      const newTag = await service.createTag('gardening', {
+        en: 'Gardening',
+        uk: 'Садівництво',
+        pl: 'Ogrodnictwo',
+      });
+      expect(newTag.key).toBe('gardening');
+      expect(newTag.translations.en).toBe('Gardening');
+      expect(mockTagModel.create).toHaveBeenCalledWith({
+        key: 'gardening',
+        translations: {
+          en: 'Gardening',
+          uk: 'Садівництво',
+          pl: 'Ogrodnictwo',
+        },
+      });
     });
   });
 });

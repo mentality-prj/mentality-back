@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { SupportedLanguage } from '../constants/supported-languages.constant';
+import { SupportedLanguage } from 'src/constants/supported-languages.constant';
 
 export class TagEntity {
   @ApiProperty({

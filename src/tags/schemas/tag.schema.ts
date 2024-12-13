@@ -4,7 +4,7 @@ import { Document } from 'mongoose';
 import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
-} from '../constants/supported-languages.constant';
+} from 'src/constants/supported-languages.constant';
 
 @Schema()
 export class Tag extends Document {

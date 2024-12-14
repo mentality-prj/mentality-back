@@ -77,9 +77,21 @@ describe('TagsService', () => {
 
   describe('createTag', () => {
     it('should create a new tag', async () => {
-      const newTag = await controller.createTag({ name: 'Gardening' });
-      expect(newTag.name).toBe('Gardening');
-      expect(service.createTag).toHaveBeenCalledWith('Gardening');
+      const newTag = await service.createTag('gardening', {
+        en: 'Gardening',
+        uk: 'Садівництво',
+        pl: 'Ogrodnictwo',
+      });
+      expect(newTag.key).toBe('gardening');
+      expect(newTag.translations.en).toBe('Gardening');
+      expect(mockTagModel.create).toHaveBeenCalledWith({
+        key: 'gardening',
+        translations: {
+          en: 'Gardening',
+          uk: 'Садівництво',
+          pl: 'Ogrodnictwo',
+        },
+      });
     });
   });
 });

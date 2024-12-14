@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CreateTagDto } from './dto/create-tag.dto';
 import { NewTagEntity, TagEntity } from './entities/tag.entity';
 import { TagsService } from './tags.service';
 
@@ -55,8 +54,11 @@ export class TagsController {
     description: 'Tag successfully created.',
     type: NewTagEntity,
   })
-  async createTag(@Body() payload: CreateTagDto): Promise<TagEntity> {
-    return this.tagsService.createTag(payload.name);
+  async createTag(
+    @Body('key') key: string,
+    @Body('translations') translations: Record<string, string>,
+  ): Promise<NewTagEntity> {
+    return this.tagsService.createTag(key, translations);
   }
 
   @Patch(':id')

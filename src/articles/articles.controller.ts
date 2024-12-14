@@ -16,8 +16,8 @@ import { LIMIT, PAGE } from 'src/constants';
 import { ApiCustomResponses } from 'src/helpers/decorators';
 
 import { ArticlesService } from './article.service';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
+import { CreateArticleDto } from './dtos/create-article.dto';
+import { UpdateArticleDto } from './dtos/update-article.dto';
 import { ArticleEntity } from './entities/article.entity';
 
 @Controller('articles')

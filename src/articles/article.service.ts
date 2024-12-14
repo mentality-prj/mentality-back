@@ -10,8 +10,8 @@ import { Model, Types } from 'mongoose';
 import { TagsService } from 'src/tags/tags.service';
 
 import { ArticlesMapper } from './article.mapper';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
+import { CreateArticleDto } from './dtos/create-article.dto';
+import { UpdateArticleDto } from './dtos/update-article.dto';
 import { ArticleEntity } from './entities/article.entity';
 import { Article } from './schemas/article.schema';
 

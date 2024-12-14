@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 
 import { Tag } from 'src/tags/schemas/tag.schema';
 
-import { CreateArticleDto } from '../dto/create-article.dto';
+import { CreateArticleDto } from '../dtos/create-article.dto';
 
 @Schema()
 export class Article extends Document {

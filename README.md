@@ -223,3 +223,7 @@ Check out a few resources that may come in handy when working with NestJS:
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+### Added Dependencies
+
+class-transformer:is a library used to transform plain JavaScript objects into class instances and apply serialization rules. It helps enforce strong typing and data consistency in NestJS applications by mapping request/response payloads into well-defined DTO (Data Transfer Object) classes.

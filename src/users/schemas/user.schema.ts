@@ -8,7 +8,9 @@ export enum ProviderType {
 
 export type ProviderName = `${ProviderType}`;
 
-export type UserRole = 'admin' | 'user';
+export const Roles = Object.freeze({ ADMIN: 'admin', USER: 'user' });
+type RoleKey = keyof typeof Roles;
+export type UserRole = (typeof Roles)[RoleKey];
 
 export interface Provider {
   type: ProviderType;

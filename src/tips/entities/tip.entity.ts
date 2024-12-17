@@ -2,18 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { SupportedLanguage } from 'src/constants/supported-languages.constant';
 
-export class TagEntity {
+export class TipEntity {
   @ApiProperty({
     example: '648a52d9fc13ae44e8000001',
-    description: 'Unique identifier of the tag',
+    description: 'Unique identifier of the tip',
   })
   id: string;
 
   @ApiProperty({
-    example: 'cleaning',
-    description: 'Unique key of the tag',
+    example: true,
+    description: 'Shows whether the tip has been published',
   })
-  key: string;
+  isPublished: boolean;
 
   @ApiProperty({
     example: {
@@ -21,35 +21,35 @@ export class TagEntity {
       uk: 'Прибирання',
       pl: 'Sprzątanie',
     },
-    description: 'Translations for the tag in supported languages',
+    description: 'Translations for the tip in supported languages',
   })
-  translations: Record<SupportedLanguage, string>;
+  content: Record<SupportedLanguage, string>;
 
   @ApiProperty({
     example: '2024-11-19T14:35:30.742Z',
-    description: 'The date when the tag was created',
+    description: 'The date when the tip was created',
   })
   createdAt: Date;
 
   @ApiProperty({
     example: '2024-11-20T14:35:30.742Z',
-    description: 'The date when the tag was last updated',
+    description: 'The date when the tip was last updated',
   })
   updatedAt?: Date;
 }
 
-export class NewTagEntity {
+export class NewTipEntity {
   @ApiProperty({
     example: '648a52d9fc13ae44e8000001',
-    description: 'Unique identifier of the tag',
+    description: 'Unique identifier of the tip',
   })
   id: string;
 
   @ApiProperty({
-    example: 'cleaning',
-    description: 'Unique key of the tag',
+    example: false,
+    description: 'Shows whether the tip has been published',
   })
-  key: string;
+  isPublished: boolean;
 
   @ApiProperty({
     example: {
@@ -57,13 +57,13 @@ export class NewTagEntity {
       uk: 'Прибирання',
       pl: 'Sprzątanie',
     },
-    description: 'Translations for the tag in various languages',
+    description: 'Translations for the tip in various languages',
   })
-  translations: Record<SupportedLanguage, string>;
+  content: Record<SupportedLanguage, string>;
 
   @ApiProperty({
     example: '2024-11-19T14:35:30.742Z',
-    description: 'The date when the tag was created',
+    description: 'The date when the tip was created',
   })
   createdAt: Date;
 }

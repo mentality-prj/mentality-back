@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { OpenaiService } from './openai/openai.service';
 import { Tag, TagSchema } from './tags/schemas/tag.schema';
 import { TagsModule } from './tags/tags.module';
+import { Tip, TipSchema } from './tips/schemas/tip.schema';
+import { TipsModule } from './tips/tips.module';
 import { User, UserSchema } from './users/schemas/user.schema';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
@@ -28,10 +30,12 @@ import { UsersService } from './users/users.service';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Tag.name, schema: TagSchema },
+      { name: Tip.name, schema: TipSchema },
     ]),
     AuthModule,
     UsersModule,
     TagsModule,
+    TipsModule,
   ],
   controllers: [
     AppController,

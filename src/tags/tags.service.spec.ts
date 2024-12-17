@@ -1,7 +1,8 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { SupportedLanguage } from './constants/supported-languages.constant';
+import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+
 import { Tag } from './schemas/tag.schema';
 import { TagsService } from './tags.service';
 

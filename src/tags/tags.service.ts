@@ -2,10 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { SupportedLanguage } from './constants/supported-languages.constant';
+import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+
 import { NewTagEntity, TagEntity } from './entities/tag.entity';
+import { TagsMapper } from './helpers/tags.mapper';
 import { Tag } from './schemas/tag.schema';
-import { TagsMapper } from './tags.mapper';
 
 @Injectable()
 export class TagsService {

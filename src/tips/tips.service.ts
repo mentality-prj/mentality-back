@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cron } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
 import { OpenaiService } from 'src/openai/openai.service';
 
+import { GenerateTipDto, UpdateTipDto } from './dtos';
 import { TipEntity } from './entities/tip.entity';
 import { TipsMapper } from './helpers/tips.mapper';
 import { Tip } from './schemas/tip.schema';
@@ -17,25 +16,42 @@ export class TipsService {
     private readonly openaiService: OpenaiService,
   ) {}
 
-  async generateTip(
-    prompt?: string,
-    lang?: SupportedLanguage,
-  ): Promise<TipEntity> {
+  async generateTip(generateTipDto: GenerateTipDto): Promise<TipEntity> {
+    const { prompt, lang } = generateTipDto;
+
     const content = await this.openaiService.generateTip(prompt, lang);
     const tip = new this.tipModel({ content });
     await tip.save();
     return TipsMapper.toTipEntity(tip);
   }
 
-  async getAllTips() {
-    return this.tipModel.find().sort({ createdAt: -1 }).exec();
+  async getManyTipsWithPagination(
+    page: number,
+    limit: number,
+  ): Promise<{ data: TipEntity[]; total: number }> {
+    const skip = (page - 1) * limit;
+
+    const [tips, total] = await Promise.all([
+      this.tipModel.find().skip(skip).limit(limit).exec(),
+      this.tipModel.countDocuments().exec(),
+    ]);
+    const data = tips.map(TipsMapper.toTipEntity);
+
+    return { data, total };
   }
 
-  async updateTip(
-    id: string,
-    translations: Record<SupportedLanguage, string>,
-    isPublished: boolean,
-  ): Promise<TipEntity> {
+  async getAllUnpublishedTips(): Promise<TipEntity[]> {
+    const unpublishedTips = await this.tipModel
+      .find({ isPublished: false })
+      .sort({ createdAt: -1 })
+      .exec();
+
+    return unpublishedTips.map(TipsMapper.toTipEntity);
+  }
+
+  async updateTip(id: string, updateTipDto: UpdateTipDto): Promise<TipEntity> {
+    const { translations, isPublished } = updateTipDto;
+
     const updatedTip = await this.tipModel
       .findByIdAndUpdate(
         id,
@@ -43,14 +59,21 @@ export class TipsService {
         { new: true },
       )
       .exec();
+
     if (!updatedTip) {
-      throw new NotFoundException('Tag not found');
+      throw new NotFoundException('Tip not found');
     }
+
     return TipsMapper.toTipEntity(updatedTip);
   }
 
-  @Cron('0 9,21 * * *')
-  async generateDailyTips() {
-    await this.generateTip();
+  async deleteTipById(id: string): Promise<boolean> {
+    const result = await this.tipModel.deleteOne({ _id: id });
+
+    if (result.deletedCount === 0) {
+      return false;
+    }
+
+    return true;
   }
 }

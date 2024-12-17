@@ -7,6 +7,7 @@ import {
   SupportedLanguage,
 } from 'src/constants/supported-languages.constant';
 import { defaultPrompts } from 'src/constants/tips/prompts';
+import { Roles } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class OpenaiService {
@@ -21,7 +22,7 @@ export class OpenaiService {
   async generateArticle(prompt: string): Promise<string> {
     const response = await this.openai.chat.completions.create({
       model: chatGPTmodel,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: Roles.USER, content: prompt }],
       max_tokens: 500,
     });
     return (
@@ -32,7 +33,7 @@ export class OpenaiService {
   async chat(message: string): Promise<string> {
     const response = await this.openai.chat.completions.create({
       model: chatGPTmodel,
-      messages: [{ role: 'user', content: message }],
+      messages: [{ role: Roles.USER, content: message }],
     });
     return response.choices[0]?.message.content.trim() || 'No reply.';
   }
@@ -56,7 +57,7 @@ export class OpenaiService {
                     role: 'system',
                     content: `Translate the following to ${targetLang}:`,
                   },
-                  { role: 'user', content: prompt },
+                  { role: Roles.USER, content: prompt },
                 ],
                 max_tokens: 100,
               });
@@ -78,7 +79,7 @@ export class OpenaiService {
       SUPPORTED_LANGUAGES.map(async (language) => {
         const tipResponse = await this.openai.chat.completions.create({
           model: chatGPTmodel,
-          messages: [{ role: 'user', content: prompts[`${language}`] }],
+          messages: [{ role: Roles.USER, content: prompts[`${language}`] }],
           max_tokens: 100,
         });
         return tipResponse.choices[0]?.message.content.trim() || '';

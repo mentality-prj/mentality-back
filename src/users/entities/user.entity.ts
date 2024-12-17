@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ProviderName } from '../schemas/user.schema';
+import { ProviderName, Roles } from '../schemas/user.schema';
 
 export class ValidateUser {
   @ApiProperty({
@@ -38,7 +38,7 @@ export class UserEntity {
   avatarUrl: string;
 
   @ApiProperty({
-    example: 'user',
+    example: Roles.USER,
     description: 'User role',
   })
   role: string;
@@ -88,7 +88,7 @@ export class NewUserEntity {
   avatarUrl: string;
 
   @ApiProperty({
-    example: 'user',
+    example: Roles.USER,
     description: 'User role',
   })
   role: string;

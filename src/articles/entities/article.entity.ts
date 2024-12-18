@@ -29,6 +29,12 @@ export class ArticleEntity {
   author?: string;
 
   @ApiProperty({
+    example: true,
+    description: 'Indicates whether the article is published',
+  })
+  isPublished?: boolean;
+
+  @ApiProperty({
     type: [TagEntity],
     description: 'The name of the tag',
   })

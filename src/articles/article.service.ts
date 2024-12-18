@@ -100,6 +100,20 @@ export class ArticlesService {
     return ArticlesMapper.toArticleEntity(await updatedArticle.save());
   }
 
+  async updateStatus(ids: string[]): Promise<{ message: string }> {
+    const count = await this.articleModel.countDocuments({ _id: { $in: ids } });
+
+    if (count !== ids.length) {
+      throw new BadRequestException('Some articles not found!');
+    }
+
+    await this.articleModel.updateMany({ _id: { $in: ids } }, [
+      { $set: { isPublished: { $not: '$isPublished' } } },
+    ]);
+
+    return { message: 'Articles updated successfully' };
+  }
+
   async getOneById(id: string): Promise<ArticleEntity> {
     const article = await this.articleModel.findById(id).exec();
     if (!article) {

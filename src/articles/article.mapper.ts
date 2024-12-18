@@ -10,6 +10,7 @@ export class ArticlesMapper {
       title: article.title,
       content: article.content,
       author: article?.author,
+      isPublished: article.isPublished,
       createdAt: article.createdAt,
       updatedAt:
         article.updatedAt !== article.createdAt ? article.updatedAt : undefined,

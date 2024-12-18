@@ -18,6 +18,7 @@ import { ApiCustomResponses } from 'src/helpers/decorators';
 import { ArticlesService } from './article.service';
 import { CreateArticleDto } from './dtos/create-article.dto';
 import { UpdateArticleDto } from './dtos/update-article.dto';
+import { UpdateArticlesDto } from './dtos/update-articles-status.dto';
 import { ArticleEntity } from './entities/article.entity';
 
 @Controller('articles')
@@ -70,6 +71,24 @@ export class ArticlesController {
   })
   async create(@Body() payload: CreateArticleDto): Promise<ArticleEntity> {
     return this.articlesService.create(payload);
+  }
+
+  @ApiCustomResponses({
+    summary: "Update article's status by ids",
+    responses: [
+      {
+        status: HttpStatus.OK,
+        description: 'Article successfully updated.',
+        type: ArticleEntity,
+      },
+      { status: HttpStatus.NOT_FOUND, description: 'Some articles not found!' },
+    ],
+  })
+  @Patch('status')
+  async updateStatus(
+    @Body() payload: UpdateArticlesDto,
+  ): Promise<{ message: string }> {
+    return this.articlesService.updateStatus(payload.articleIds);
   }
 
   @ApiCustomResponses({

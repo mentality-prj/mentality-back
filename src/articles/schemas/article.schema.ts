@@ -16,6 +16,9 @@ export class Article extends Document {
   @Prop({ required: false, unique: false })
   author?: string;
 
+  @Prop({ required: false, unique: false, default: false })
+  isPublished?: boolean;
+
   @Prop({ type: [Types.ObjectId], ref: 'Tag', index: true })
   tags: Tag[];
 

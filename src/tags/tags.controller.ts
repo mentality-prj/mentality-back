@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
-
+import { CreateTagDto } from './dtos/create-tag.dto';
+import { UpdateTagDto } from './dtos/update-tag.dto';
 import { NewTagEntity, TagEntity } from './entities/tag.entity';
 import { TagsService } from './tags.service';
 
@@ -56,11 +56,8 @@ export class TagsController {
     description: 'Tag successfully created.',
     type: NewTagEntity,
   })
-  async createTag(
-    @Body('key') key: string,
-    @Body('translations') translations: Record<SupportedLanguage, string>,
-  ): Promise<NewTagEntity> {
-    return this.tagsService.createTag(key, translations);
+  async createTag(@Body() createTagDto: CreateTagDto): Promise<NewTagEntity> {
+    return this.tagsService.createTag(createTagDto);
   }
 
   @Patch(':id')
@@ -73,8 +70,8 @@ export class TagsController {
   })
   async updateTag(
     @Param('id') id: string,
-    @Body('translations') translations: Record<string, string>,
+    @Body() updateTagDto: UpdateTagDto,
   ): Promise<TagEntity> {
-    return this.tagsService.updateTag(id, translations);
+    return this.tagsService.updateTag(id, updateTagDto);
   }
 }

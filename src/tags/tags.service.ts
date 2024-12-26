@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
-
+import { CreateTagDto } from './dtos/create-tag.dto';
+import { UpdateTagDto } from './dtos/update-tag.dto';
 import { NewTagEntity, TagEntity } from './entities/tag.entity';
 import { TagsMapper } from './helpers/tags.mapper';
 import { Tag } from './schemas/tag.schema';
@@ -25,22 +25,16 @@ export class TagsService {
     return TagsMapper.toTagEntity(tag);
   }
 
-  async createTag(
-    key: string,
-    translations: Record<SupportedLanguage, string>,
-  ): Promise<NewTagEntity> {
-    const newTag = await this.tagModel.create({ key, translations });
+  async createTag(createTagDto: CreateTagDto): Promise<NewTagEntity> {
+    const newTag = await this.tagModel.create(createTagDto);
     return TagsMapper.toTagEntity(newTag);
   }
 
-  async updateTag(
-    id: string,
-    translations: Record<SupportedLanguage, string>,
-  ): Promise<TagEntity> {
+  async updateTag(id: string, updateTagDto: UpdateTagDto): Promise<TagEntity> {
     const updatedTag = await this.tagModel
       .findByIdAndUpdate(
         id,
-        { translations, updatedAt: new Date() },
+        { ...updateTagDto, updatedAt: new Date() },
         { new: true },
       )
       .exec();

@@ -12,11 +12,11 @@ export class Tip extends Document {
     type: Object,
     required: true,
     validate: {
-      validator: (content: Record<SupportedLanguage, string>) =>
-        Object.keys(content).every((key: SupportedLanguage) =>
+      validator: (translations: Record<SupportedLanguage, string>) =>
+        Object.keys(translations).every((key: SupportedLanguage) =>
           SUPPORTED_LANGUAGES.includes(key),
         ),
-      message: 'Invalid language keys in content field',
+      message: 'Invalid language keys in translations field',
     },
   })
   translations: Record<SupportedLanguage, string>;

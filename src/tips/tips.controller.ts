@@ -28,7 +28,7 @@ export class TipsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Generate a new tip' })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'Tip successfully generated.',
     type: NewTipEntity,
   })
@@ -42,7 +42,7 @@ export class TipsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Generate a new tip' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'Tip successfully updated.',
     type: TipEntity,
   })

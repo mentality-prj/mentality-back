@@ -3,7 +3,7 @@ import axios from 'axios';
 import { OAuth2Client } from 'google-auth-library';
 
 import { ValidateUserDto } from 'src/users/dto/validate-token-dto';
-import { Provider, UserRole } from 'src/users/schemas/user.schema';
+import { Provider, Roles, UserRole } from 'src/users/schemas/user.schema';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class AuthService {
     let email: string | null = null;
     let name: string | null = null;
     let avatarUrl: string | null = null;
-    const role: UserRole = 'user';
+    const role: UserRole = Roles.USER;
     let providerID: string | null = null;
 
     if (provider === 'google') {

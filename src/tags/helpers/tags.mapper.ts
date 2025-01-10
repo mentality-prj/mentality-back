@@ -1,5 +1,5 @@
-import { TagEntity } from './entities/tag.entity';
-import { Tag } from './schemas/tag.schema';
+import { TagEntity } from '../entities/tag.entity';
+import { Tag } from '../schemas/tag.schema';
 
 export class TagsMapper {
   static toTagEntity(tag: Tag): TagEntity {

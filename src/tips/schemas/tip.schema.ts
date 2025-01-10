@@ -7,22 +7,22 @@ import {
 } from 'src/constants/supported-languages.constant';
 
 @Schema()
-export class Tag extends Document {
-  @Prop({ required: true, unique: true })
-  key: string;
-
+export class Tip extends Document {
   @Prop({
     type: Object,
     required: true,
     validate: {
-      validator: (name: Record<SupportedLanguage, string>) =>
-        Object.keys(name).every((key: SupportedLanguage) =>
+      validator: (content: Record<SupportedLanguage, string>) =>
+        Object.keys(content).every((key: SupportedLanguage) =>
           SUPPORTED_LANGUAGES.includes(key),
         ),
-      message: 'Invalid language keys in name field',
+      message: 'Invalid language keys in content field',
     },
   })
   translations: Record<SupportedLanguage, string>;
+
+  @Prop({ default: false })
+  isPublished: boolean;
 
   @Prop({ default: Date.now })
   createdAt: Date;
@@ -31,4 +31,4 @@ export class Tag extends Document {
   updatedAt: Date;
 }
 
-export const TagSchema = SchemaFactory.createForClass(Tag);
+export const TipSchema = SchemaFactory.createForClass(Tip);

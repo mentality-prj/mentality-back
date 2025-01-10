@@ -1,7 +1,8 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { SupportedLanguage } from './constants/supported-languages.constant';
+import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+
 import { Tag } from './schemas/tag.schema';
 import { TagsService } from './tags.service';
 
@@ -83,10 +84,13 @@ describe('TagsService', () => {
 
   describe('createTag', () => {
     it('should create a new tag', async () => {
-      const newTag = await service.createTag('gardening', {
-        en: 'Gardening',
-        uk: 'Садівництво',
-        pl: 'Ogrodnictwo',
+      const newTag = await service.createTag({
+        key: 'gardening',
+        translations: {
+          en: 'Gardening',
+          uk: 'Садівництво',
+          pl: 'Ogrodnictwo',
+        },
       });
       expect(newTag.translations.en).toBe('Gardening');
       expect(mockTagModel.create).toHaveBeenCalledWith({

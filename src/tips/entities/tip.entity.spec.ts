@@ -5,7 +5,7 @@ describe('TipEntity', () => {
     const tip: TipEntity = new TipEntity();
     tip.id = '648a52d9fc13ae44e8000001';
     tip.isPublished = true;
-    tip.content = {
+    tip.translations = {
       en: 'Cleaning',
       uk: 'Прибирання',
       pl: 'Sprzątanie',
@@ -16,7 +16,7 @@ describe('TipEntity', () => {
     expect(tip).toBeDefined();
     expect(tip.id).toBe('648a52d9fc13ae44e8000001');
     expect(tip.isPublished).toBe(true);
-    expect(tip.content).toEqual({
+    expect(tip.translations).toEqual({
       en: 'Cleaning',
       uk: 'Прибирання',
       pl: 'Sprzątanie',
@@ -31,7 +31,7 @@ describe('NewTipEntity', () => {
     const newTip: NewTipEntity = new NewTipEntity();
     newTip.id = '648a52d9fc13ae44e8000001';
     newTip.isPublished = false;
-    newTip.content = {
+    newTip.translations = {
       en: 'Cleaning',
       uk: 'Прибирання',
       pl: 'Sprzątanie',
@@ -41,7 +41,7 @@ describe('NewTipEntity', () => {
     expect(newTip).toBeDefined();
     expect(newTip.id).toBe('648a52d9fc13ae44e8000001');
     expect(newTip.isPublished).toBe(false);
-    expect(newTip.content).toEqual({
+    expect(newTip.translations).toEqual({
       en: 'Cleaning',
       uk: 'Прибирання',
       pl: 'Sprzątanie',

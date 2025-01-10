@@ -6,7 +6,7 @@ export class TipsMapper {
     return {
       id: tip._id.toString(),
       isPublished: tip.isPublished,
-      content: tip.content,
+      translations: tip.translations,
       createdAt: tip.createdAt,
       ...(tip.updatedAt && tip.updatedAt !== tip.createdAt
         ? { updatedAt: tip.updatedAt }

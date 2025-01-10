@@ -19,7 +19,7 @@ export class Tip extends Document {
       message: 'Invalid language keys in content field',
     },
   })
-  content: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguage, string>;
 
   @Prop({ default: false })
   isPublished: boolean;

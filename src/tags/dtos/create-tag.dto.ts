@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsObject, IsString } from 'class-validator';
-
 import { SupportedLanguage } from 'src/constants/supported-languages.constant';
 
 export class CreateTagDto {

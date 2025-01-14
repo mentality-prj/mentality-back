@@ -56,8 +56,11 @@ export class TagsController {
     description: 'Tag successfully created.',
     type: NewTagEntity,
   })
-  async createTag(@Body() createTagDto: CreateTagDto): Promise<NewTagEntity> {
-    return this.tagsService.createTag(createTagDto);
+  async createTag(
+    @Body('key') key: string,
+    @Body('translations') translations: Record<string, string>,
+  ): Promise<NewTagEntity> {
+    return this.tagsService.createTag(key, translations);
   }
 
   @Patch(':id')

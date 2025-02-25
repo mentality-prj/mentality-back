@@ -28,21 +28,21 @@ export class TipsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Generate a new tip' })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     description: 'Tip successfully generated.',
     type: NewTipEntity,
   })
   async generateTip(
     @Body() generateTipDto: GenerateTipDto,
   ): Promise<NewTipEntity> {
-    return this.tipsService.generateTip(generateTipDto);
+    return this.tipsService.generateTip(generateTipDto, 'openai');
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Generate a new tip' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'Tip successfully updated.',
     type: TipEntity,
   })

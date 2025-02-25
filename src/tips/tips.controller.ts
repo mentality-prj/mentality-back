@@ -35,7 +35,7 @@ export class TipsController {
   async generateTip(
     @Body() generateTipDto: GenerateTipDto,
   ): Promise<NewTipEntity> {
-    return this.tipsService.generateTip(generateTipDto);
+    return this.tipsService.generateTip(generateTipDto, 'openai');
   }
 
   @Patch(':id')

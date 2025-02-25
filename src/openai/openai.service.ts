@@ -7,6 +7,7 @@ import {
   SupportedLanguage,
 } from 'src/constants/supported-languages.constant';
 import { defaultPrompts } from 'src/constants/tips/prompts';
+import { TipEntity } from 'src/tips/entities/tip.entity';
 import { Roles } from 'src/users/schemas/user.schema';
 
 @Injectable()
@@ -14,11 +15,13 @@ export class OpenaiService {
   private openai: OpenAI;
 
   constructor() {
+    // Initialize OpenAI with the API key from environment variables
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
   }
 
+  // Generate an article based on the given prompt
   async generateArticle(prompt: string): Promise<string> {
     const response = await this.openai.chat.completions.create({
       model: chatGPTmodel,
@@ -30,6 +33,7 @@ export class OpenaiService {
     );
   }
 
+  // Chat with the model using the given message
   async chat(message: string): Promise<string> {
     const response = await this.openai.chat.completions.create({
       model: chatGPTmodel,
@@ -38,10 +42,11 @@ export class OpenaiService {
     return response.choices[0]?.message.content.trim() || 'No reply.';
   }
 
+  // Generate a tip based on the given prompt and language
   async generateTip(
     prompt?: string,
     lang?: SupportedLanguage,
-  ): Promise<{ [key: string]: string }> {
+  ): Promise<TipEntity['translations']> {
     const prompts = { ...defaultPrompts };
 
     if (prompt && lang) {
@@ -66,7 +71,9 @@ export class OpenaiService {
         ),
       );
 
+      // Add the original prompt to the prompts object
       prompts[`${lang}`] = prompt;
+      // Add the translations to the prompts object
       SUPPORTED_LANGUAGES.filter((language) => language !== lang).forEach(
         (targetLang, index) => {
           prompts[`${targetLang}`] =
@@ -75,6 +82,7 @@ export class OpenaiService {
       );
     }
 
+    // Generate tips for all supported languages
     const responses = await Promise.all(
       SUPPORTED_LANGUAGES.map(async (language) => {
         const tipResponse = await this.openai.chat.completions.create({
@@ -86,11 +94,15 @@ export class OpenaiService {
       }),
     );
 
-    const tips: { [key: string]: string } = {};
+    const translations: TipEntity['translations'] =
+      {} as TipEntity['translations'];
+
+    // Map the responses to the translations object
     SUPPORTED_LANGUAGES.forEach((language, index) => {
-      tips[`${language}`] = responses[`${index}`] || 'No tip generated.';
+      translations[`${language}`] =
+        responses[`${index}`] || 'No tip generated.';
     });
 
-    return tips;
+    return translations;
   }
 }

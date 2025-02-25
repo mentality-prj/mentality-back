@@ -79,7 +79,6 @@ export class TipsService {
     generateTipDto: GenerateTipDto,
   ): Promise<TipEntity> {
     const { prompt, lang } = generateTipDto;
-    const _prompt = prompt || defaultPrompts[`${lang}`];
 
     // Generate content using OpenAI
     const content = await this.openaiService.generateTip(prompt, lang);

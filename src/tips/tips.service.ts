@@ -50,6 +50,7 @@ export class TipsService {
     const newTip = new this.tipModel({
       translations: translations,
       createdAt: new Date(),
+      isPublished: false,
     });
     await newTip.save();
 
@@ -80,11 +81,22 @@ export class TipsService {
   ): Promise<TipEntity> {
     const { prompt, lang } = generateTipDto;
 
-    // Generate content using OpenAI
-    const content = await this.openaiService.generateTip(prompt, lang);
-    const tip = new this.tipModel({ content });
-    await tip.save();
-    return TipsMapper.toTipEntity(tip);
+    try {
+      // Generate content using OpenAI
+      const content = await this.openaiService.generateTip(prompt);
+
+      const translationsMap = await this.getTranslations(content, lang);
+
+      // Save the new Tip to the database
+      const newTip = await this.saveTip(translationsMap);
+
+      return newTip;
+    } catch (error) {
+      console.error('Error generating tip:', error);
+
+      // Error handling: throw a user-friendly exception
+      throw new Error('Failed to generate tip. Please try again later.');
+    }
   }
 
   // Generate a tip using HuggingFace service

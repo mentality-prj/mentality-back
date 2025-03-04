@@ -1,5 +1,5 @@
 export const defaultPrompts = {
-  en: 'Give me a psychological tip to reduce stress.',
-  uk: 'Дайте мені психологічну пораду для зменшення стресу.',
-  pl: 'Podaj mi psychologiczną radę na zmniejszenie stresu.',
+  en: 'Generate a short but meaningful psychological tip (up to 200 tokens). Each tip should be unique and cover different aspects: emotional state, motivation, stress resilience, self-esteem, communication, etc. Formulate it clearly and concisely, without unnecessary details. Do not repeat tips. Use different approaches: cognitive techniques, behavioral strategies, metaphors, and self-reflection questions. Present it in a friendly yet professional tone.',
+  uk: 'Згенеруй коротку, але змістовну психологічну пораду (до 200 токенів). Кожна порада має бути унікальною та стосуватися різних аспектів: емоційного стану, мотивації, стресостійкості, самооцінки, спілкування тощо. Формулюй чітко, без води. Не повторюй поради. Використовуй різні підходи: когнітивні техніки, поведінкові стратегії, метафори, питання для самороздумів. Подавай у дружньому, але професійному тоні.',
+  pl: 'Wygeneruj krótką, ale treściwą poradę psychologiczną (do 200 tokenów). Każda porada powinna być unikalna i dotyczyć różnych aspektów: stanu emocjonalnego, motywacji, odporności na stres, samooceny, komunikacji itp. Formułuj ją jasno i zwięźle, bez zbędnych szczegółów. Nie powtarzaj porad. Stosuj różne podejścia: techniki poznawcze, strategie behawioralne, metafory, pytania do autorefleksji. Przedstawiaj je w przyjaznym, ale profesjonalnym tonie.',
 };

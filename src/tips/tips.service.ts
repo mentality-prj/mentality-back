@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { AI } from 'src/constants';
 import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
@@ -9,6 +10,7 @@ import {
 import { defaultPrompts } from 'src/constants/tips/prompts';
 import { HuggingFaceService } from 'src/huggingface/huggingface.service';
 import { OpenaiService } from 'src/openai/openai.service';
+import { AIType } from 'src/types';
 
 import { GenerateTipDto, UpdateTipDto } from './dtos';
 import { TipEntity } from './entities/tip.entity';
@@ -61,14 +63,14 @@ export class TipsService {
   // Generate a tip using the specified service
   async generateTip(
     generateTipDto: GenerateTipDto,
-    service: 'openai' | 'huggingface',
+    service: AIType,
   ): Promise<TipEntity> {
     const { prompt, lang } = generateTipDto;
     const _prompt = prompt || defaultPrompts[`${lang}`];
 
-    if (service === 'openai') {
+    if (service === AI.OpenAI) {
       return this.generateTipWithOpenAI({ prompt: _prompt, lang });
-    } else if (service === 'huggingface') {
+    } else if (service === AI.HuggingFace) {
       return this.generateTipWithHuggingFace({ prompt: _prompt, lang });
     } else {
       throw new Error('Unsupported service');

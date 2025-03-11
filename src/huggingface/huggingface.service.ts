@@ -13,20 +13,20 @@ export class HuggingFaceService {
 
   constructor(private readonly httpService: HttpService) {}
 
-  // Генерація тексту
+  // Text generation
   async generateText(prompt: string): Promise<string> {
-    const model = generateModel; // Модель для генерації
+    const model = generateModel; // Model for generation
     const headers = { Authorization: `Bearer ${this.token}` };
     const body = {
       inputs: prompt,
       options: {
-        max_length: 100, // Максимальна довжина відповіді
-        temperature: 0.7, // Регуляція випадковості
+        max_length: 100, // Maximum response length
+        temperature: 0.7, // Randomness regulation
       },
     };
 
-    const maxRetries = 5; // Максимальна кількість спроб
-    const retryDelay = LONG_DELAY; // Затримка між спробами в мс (5 секунд)
+    const maxRetries = 5; // Maximum number of attempts
+    const retryDelay = LONG_DELAY; // Delay between attempts in ms (5 seconds)
     let attempt = 0;
 
     while (attempt < maxRetries) {
@@ -35,7 +35,7 @@ export class HuggingFaceService {
           this.httpService.post(`${this.baseUrl}/${model}`, body, { headers }),
         );
 
-        // Перевіряємо, чи є згенерований текст у відповіді
+        // Check if generated text is in the response
         if (response.data && response.data[0]?.generated_text) {
           return response.data[0].generated_text;
         }
@@ -67,7 +67,7 @@ export class HuggingFaceService {
     );
   }
 
-  // Переклад тексту
+  // Text translation
   async translateText(
     text: string,
     targetLang: SupportedLanguage,
@@ -78,7 +78,7 @@ export class HuggingFaceService {
     const headers = { Authorization: `Bearer ${this.token}` };
     const body = { inputs: text };
 
-    const maxRetries = 5; // Максимальна кількість повторних спроб
+    const maxRetries = 5; // Maximum number of retry attempts
     let attempt = 0;
 
     while (attempt < maxRetries) {
@@ -97,14 +97,14 @@ export class HuggingFaceService {
           error.response?.status === HttpStatus.SERVICE_UNAVAILABLE ||
           error.response?.data?.error?.includes('currently loading')
         ) {
-          // Логування, якщо модель ще завантажується
+          // Logging if the model is still loading
           console.log(
             `Model ${model} is currently loading, retrying in 5 seconds...`,
           );
-          await new Promise((resolve) => setTimeout(resolve, LONG_DELAY)); // Очікування перед повторною спробою
+          await new Promise((resolve) => setTimeout(resolve, LONG_DELAY)); // Waiting before retrying
           attempt++;
         } else {
-          // Інші помилки кидаємо далі
+          // Throw other errors
           console.error(
             'Error during translation:',
             error.response?.data || error,
@@ -118,7 +118,7 @@ export class HuggingFaceService {
       }
     }
 
-    // Якщо всі спроби вичерпано
+    // If all attempts are exhausted
     throw new Error(
       `Failed to translate text to ${targetLang} after ${maxRetries} attempts.`,
     );

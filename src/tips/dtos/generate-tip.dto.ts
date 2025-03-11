@@ -3,13 +3,11 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { SupportedLanguage } from 'src/constants/supported-languages.constant';
 
 export class GenerateTipDto {
-  @IsOptional()
   @IsString()
-  prompt?: string;
+  prompt: string;
 
-  @IsOptional()
   @IsString()
-  lang?: SupportedLanguage;
+  lang: SupportedLanguage;
 
   @IsOptional()
   @IsBoolean()

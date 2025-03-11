@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { AI } from 'src/constants';
 import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
@@ -9,6 +10,7 @@ import {
 import { defaultPrompts } from 'src/constants/tips/prompts';
 import { HuggingFaceService } from 'src/huggingface/huggingface.service';
 import { OpenaiService } from 'src/openai/openai.service';
+import { AIType } from 'src/types';
 
 import { GenerateTipDto, UpdateTipDto } from './dtos';
 import { TipEntity } from './entities/tip.entity';
@@ -50,6 +52,7 @@ export class TipsService {
     const newTip = new this.tipModel({
       translations: translations,
       createdAt: new Date(),
+      isPublished: false,
     });
     await newTip.save();
 
@@ -60,14 +63,14 @@ export class TipsService {
   // Generate a tip using the specified service
   async generateTip(
     generateTipDto: GenerateTipDto,
-    service: 'openai' | 'huggingface',
+    service: AIType,
   ): Promise<TipEntity> {
     const { prompt, lang } = generateTipDto;
     const _prompt = prompt || defaultPrompts[`${lang}`];
 
-    if (service === 'openai') {
+    if (service === AI.OpenAI) {
       return this.generateTipWithOpenAI({ prompt: _prompt, lang });
-    } else if (service === 'huggingface') {
+    } else if (service === AI.HuggingFace) {
       return this.generateTipWithHuggingFace({ prompt: _prompt, lang });
     } else {
       throw new Error('Unsupported service');
@@ -80,11 +83,22 @@ export class TipsService {
   ): Promise<TipEntity> {
     const { prompt, lang } = generateTipDto;
 
-    // Generate content using OpenAI
-    const content = await this.openaiService.generateTip(prompt, lang);
-    const tip = new this.tipModel({ content });
-    await tip.save();
-    return TipsMapper.toTipEntity(tip);
+    try {
+      // Generate content using OpenAI
+      const content = await this.openaiService.generateTip(prompt);
+
+      const translationsMap = await this.getTranslations(content, lang);
+
+      // Save the new Tip to the database
+      const newTip = await this.saveTip(translationsMap);
+
+      return newTip;
+    } catch (error) {
+      console.error('Error generating tip:', error);
+
+      // Error handling: throw a user-friendly exception
+      throw new Error('Failed to generate tip. Please try again later.');
+    }
   }
 
   // Generate a tip using HuggingFace service

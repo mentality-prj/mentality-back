@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { LIMIT, PAGE } from 'src/constants';
+import { AI, LIMIT, PAGE } from 'src/constants';
 
 import { GenerateTipDto } from './dtos/generate-tip.dto';
 import { UpdateTipDto } from './dtos/update-tip.dto';
@@ -35,7 +35,7 @@ export class TipsController {
   async generateTip(
     @Body() generateTipDto: GenerateTipDto,
   ): Promise<NewTipEntity> {
-    return this.tipsService.generateTip(generateTipDto, 'openai');
+    return this.tipsService.generateTip(generateTipDto, AI.OpenAI);
   }
 
   @Patch(':id')

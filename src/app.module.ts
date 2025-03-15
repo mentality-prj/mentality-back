@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { AffirmationsModule } from './affirmations/affirmations.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArticlesController } from './articles/articles.controller';
@@ -36,6 +37,7 @@ import { UsersService } from './users/users.service';
     UsersModule,
     TagsModule,
     TipsModule,
+    AffirmationsModule,
   ],
   controllers: [
     AppController,

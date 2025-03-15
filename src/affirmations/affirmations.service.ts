@@ -145,4 +145,8 @@ export class AffirmationsService {
       throw new Error('Failed to generate image. Please try again later.');
     }
   }
+
+  async getAllAffirmations(): Promise<Affirmation[]> {
+    return this.affirmationModel.find().sort({ createdAt: -1 }).exec();
+  }
 }

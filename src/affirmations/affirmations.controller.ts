@@ -102,4 +102,9 @@ export class AffirmationsController {
     );
     return { imageUrl };
   }
+
+  @Get()
+  async getAllAffirmations() {
+    return this.affirmationsService.getAllAffirmations();
+  }
 }

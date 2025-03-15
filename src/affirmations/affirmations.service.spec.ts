@@ -23,11 +23,6 @@ describe('AffirmationsService', () => {
             create: jest.fn(),
             find: jest.fn().mockReturnValue({
               sort: jest.fn().mockReturnThis(),
-              skip: jest.fn().mockReturnThis(),
-              limit: jest.fn().mockReturnThis(),
-              exec: jest.fn(),
-            }),
-            countDocuments: jest.fn().mockReturnValue({
               exec: jest.fn(),
             }),
           },
@@ -41,26 +36,45 @@ describe('AffirmationsService', () => {
     (service as any).openAIService = mockOpenAIService;
   });
 
-  it('should return all affirmations with pagination', async () => {
-    const mockAffirmations = {
+  it('should generate and save an affirmation', async () => {
+    const mockAffirmation = {
+      text: mockOpenAIService.generateAffirmationText(),
       imageUrl: mockOpenAIService.generateImage(''),
+      createdAt: new Date(),
+      _id: 'mocked_id',
     };
+
+    (model.create as jest.Mock).mockResolvedValue(mockAffirmation);
+
+    const result = await service.generateAndSaveAffirmation();
+
+    expect(model.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        text: mockAffirmation.text,
+        imageUrl: mockAffirmation.imageUrl,
+      }),
+    );
+
+    expect(result).toMatchObject(mockAffirmation);
+  });
+
+  it('should return all affirmations', async () => {
+    const mockAffirmations = mockOpenAIService
+      .getMockAffirmations()
+      .map((text, index) => ({
+        _id: `mocked_id_${index}`,
+        text,
+        imageUrl: `https://picsum.photos/200/300?random=${index}`,
+        createdAt: new Date(),
+      }));
 
     (model.find as jest.Mock).mockReturnValue({
       sort: jest.fn().mockReturnThis(),
-      skip: jest.fn().mockReturnThis(),
-      limit: jest.fn().mockReturnThis(),
       exec: jest.fn().mockResolvedValue(mockAffirmations),
     });
 
-    (model.countDocuments as jest.Mock).mockReturnValue({
-      exec: jest.fn().mockReturnThis(),
-    });
+    const result = await service.getAllAffirmations();
 
-    const result = await service.getManyAffirmationsWithPagination();
-
-    expect(result.data).toEqual({
-      imageUrl: 'https://picsum.photos/1478/1478',
-    });
+    expect(result).toEqual(mockAffirmations);
   });
 });

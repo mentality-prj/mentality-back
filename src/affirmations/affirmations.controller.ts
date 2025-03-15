@@ -48,4 +48,9 @@ export class AffirmationsController {
     // Update the affirmation's published status
     return this.affirmationsService.updateAffirmation(id, body.isPublished);
   }
+
+  @Get()
+  async getAllAffirmations() {
+    return this.affirmationsService.getAllAffirmations();
+  }
 }

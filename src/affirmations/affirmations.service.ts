@@ -10,40 +10,29 @@ import { Affirmation } from './schemas/affirmation.schema';
 @Injectable()
 export class AffirmationsService {
   private openAIService: MockOpenAIService;
-  // Inject the Affirmation model
   constructor(
     @InjectModel(Affirmation.name) private affirmationModel: Model<Affirmation>,
   ) {
     this.openAIService = new MockOpenAIService();
   }
 
-  // Generate an affirmation text
   async generateAffirmationText(): Promise<string> {
-    const texts = await this.openAIService.generateAffirmationText();
-    // Return the first text if it exists
-    return Array.isArray(texts) && texts.length > 0 ? texts[0] : '';
+    return this.openAIService.generateAffirmationText();
   }
 
-  // Generate an image
   async generateImage(_prompt: string): Promise<string> {
-    const images = await this.openAIService.generateImage(_prompt);
-    // Return the first image if it exists
-    return Array.isArray(images) && images.length > 0 ? images[0] : '';
+    return this.openAIService.generateImage(_prompt);
   }
 
-  // Upload to Cloudinary
   async uploadToCloudinary(imageUrl: string): Promise<string> {
     return imageUrl;
   }
 
-  // Generate and save an affirmation
   async generateAndSaveAffirmation(): Promise<Affirmation> {
-    // Generate an affirmation value
     const text = await this.generateAffirmationText();
     const imageUrl = await this.generateImage(text);
     const cloudinaryUrl = await this.uploadToCloudinary(imageUrl);
 
-    // Create a new affirmation
     const newAffirmation = await this.affirmationModel.create({
       text,
       imageUrl: cloudinaryUrl,
@@ -86,5 +75,9 @@ export class AffirmationsService {
     }
 
     return updatedAffirmation;
+  }
+
+  async getAllAffirmations(): Promise<Affirmation[]> {
+    return this.affirmationModel.find().sort({ createdAt: -1 }).exec();
   }
 }

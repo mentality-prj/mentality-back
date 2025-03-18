@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { ArticlesController } from './articles/articles.controller';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
+import { GamesModule } from './games/games.module';
+import { GamesService } from './games/games.service';
 import { OpenaiService } from './openai/openai.service';
 import { Tag, TagSchema } from './tags/schemas/tag.schema';
 import { TagsModule } from './tags/tags.module';
@@ -38,6 +40,7 @@ import { UsersService } from './users/users.service';
     TagsModule,
     TipsModule,
     AffirmationsModule,
+    GamesModule,
   ],
   controllers: [
     AppController,
@@ -45,6 +48,6 @@ import { UsersService } from './users/users.service';
     UsersController,
     ArticlesController,
   ],
-  providers: [AppService, OpenaiService, UsersService],
+  providers: [AppService, OpenaiService, UsersService, GamesService],
 })
 export class AppModule {}

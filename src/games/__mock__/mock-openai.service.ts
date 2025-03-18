@@ -9,11 +9,11 @@ export class MockOpenAIGameRulesService {
 
   private fixedRule = 'In chess, think ahead and plan your moves carefully.';
 
-  generateGameRule(): string {
+  generateGame(): string {
     return this.fixedRule;
   }
 
-  getMockGameRules(): string[] {
+  getMockGames(): string[] {
     return this.mockGameRules;
   }
 }

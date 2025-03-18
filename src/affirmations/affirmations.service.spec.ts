@@ -23,6 +23,8 @@ describe('AffirmationsService', () => {
             create: jest.fn(),
             find: jest.fn().mockReturnValue({
               sort: jest.fn().mockReturnThis(),
+              skip: jest.fn().mockReturnThis(),
+              limit: jest.fn().mockReturnThis(),
               exec: jest.fn(),
             }),
           },
@@ -40,6 +42,7 @@ describe('AffirmationsService', () => {
     const mockAffirmation = {
       text: mockOpenAIService.generateAffirmationText(),
       imageUrl: mockOpenAIService.generateImage(''),
+      isPublished: false,
       createdAt: new Date(),
       _id: 'mocked_id',
     };
@@ -65,11 +68,14 @@ describe('AffirmationsService', () => {
         _id: `mocked_id_${index}`,
         text,
         imageUrl: `https://picsum.photos/200/300?random=${index}`,
+        isPublished: false,
         createdAt: new Date(),
       }));
 
     (model.find as jest.Mock).mockReturnValue({
       sort: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
       exec: jest.fn().mockResolvedValue(mockAffirmations),
     });
 

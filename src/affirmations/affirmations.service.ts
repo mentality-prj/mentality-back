@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { MockOpenAIService } from './__mock__/mock-openai.service';
 import { Affirmation } from './schemas/affirmation.schema';
 
+const DEFAULT_LIMIT = 10;
+
 @Injectable()
 export class AffirmationsService {
   private openAIService: MockOpenAIService;
@@ -35,12 +37,38 @@ export class AffirmationsService {
     const newAffirmation = await this.affirmationModel.create({
       text,
       imageUrl: cloudinaryUrl,
+      isPublished: false,
     });
 
     return newAffirmation;
   }
 
-  async getAllAffirmations(): Promise<Affirmation[]> {
-    return this.affirmationModel.find().sort({ createdAt: -1 }).exec();
+  async getAllAffirmations(
+    page: number = 1,
+    limit: number = DEFAULT_LIMIT,
+  ): Promise<Affirmation[]> {
+    const skip = (page - 1) * limit;
+
+    return this.affirmationModel
+      .find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+  }
+
+  async updateAffirmation(
+    id: string,
+    isPublished: boolean,
+  ): Promise<Affirmation> {
+    const updatedAffirmation = await this.affirmationModel
+      .findByIdAndUpdate(id, { isPublished }, { new: true })
+      .exec();
+
+    if (!updatedAffirmation) {
+      throw new Error('Affirmation not found');
+    }
+
+    return updatedAffirmation;
   }
 }

@@ -1,4 +1,4 @@
-export class MockGameRulesService {
+export class MockOpenAIGameRulesService {
   private mockGameRules: string[] = [
     'In tag, always be quick and agile to avoid getting tagged.',
     'In chess, think ahead and plan your moves carefully.',

@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { LIMIT, PAGE } from 'src/constants';
+
 import { MockOpenAIGameRulesService } from './__mock__/mock-openai.service';
 import { Games } from './schemas/games.schema';
-
-const DEFAULT_LIMIT = 10;
 
 @Injectable()
 export class GamesService {
@@ -42,8 +42,8 @@ export class GamesService {
   }
 
   async getAllGames(
-    page: number = 1,
-    limit: number = DEFAULT_LIMIT,
+    page: number = PAGE,
+    limit: number = LIMIT,
   ): Promise<Games[]> {
     const skip = (page - 1) * limit;
 
@@ -67,11 +67,7 @@ export class GamesService {
     return updatedGame;
   }
 
-  async deleteGame(id: string): Promise<{ message: string }> {
-    const deletedGame = await this.gamesModel.findByIdAndDelete(id).exec();
-    if (!deletedGame) {
-      throw new NotFoundException('Game not found');
-    }
-    return { message: 'Game deleted successfully' };
+  async getAllUnpublished(): Promise<Games[]> {
+    return this.gamesModel.find({ isPublished: false }).exec();
   }
 }

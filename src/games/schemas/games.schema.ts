@@ -3,8 +3,8 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: false, versionKey: false })
 export class Games extends Document {
-  @Prop({ required: true })
-  textGames: string;
+  @Prop({ type: Object, required: true })
+  textGames: Record<string, any>;
 
   @Prop({ required: true })
   isPublished: boolean;

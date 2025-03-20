@@ -10,7 +10,7 @@ describe('GamesController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [GamesController],
       providers: [
-        GamesService, // Додаємо GamesService як провайдер
+        GamesService, // Add GamesService as provider
         {
           provide: GamesService,
           useValue: {

@@ -10,7 +10,6 @@ import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { GamesController } from './games/games.controller';
 import { GamesModule } from './games/games.module';
-import { GamesService } from './games/games.service';
 import { Games, GamesSchema } from './games/schemas/games.schema';
 import { OpenaiService } from './openai/openai.service';
 import { Tag, TagSchema } from './tags/schemas/tag.schema';
@@ -52,6 +51,6 @@ import { UsersService } from './users/users.service';
     ArticlesController,
     GamesController,
   ],
-  providers: [AppService, OpenaiService, UsersService, GamesService],
+  providers: [AppService, OpenaiService, UsersService],
 })
 export class AppModule {}

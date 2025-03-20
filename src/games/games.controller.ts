@@ -1,12 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+
+import { LIMIT, PAGE } from 'src/constants';
 
 import { GamesService } from './games.service';
 import { Games } from './schemas/games.schema';
@@ -25,6 +19,11 @@ export class GamesController {
     return this.gamesService.getGameById(id);
   }
 
+  @Get('unpublished')
+  async getAllUnpublished(): Promise<Games[]> {
+    return this.gamesService.getAllUnpublished();
+  }
+
   @Put(':id')
   async updateGame(
     @Param('id') id: string,
@@ -33,9 +32,11 @@ export class GamesController {
     return this.gamesService.updateGame(id, isPublished);
   }
 
-  @Delete(':id')
-  async deleteGame(@Param('id') id: string): Promise<{ message: string }> {
-    await this.gamesService.deleteGame(id);
-    return { message: 'Game deleted successfully' };
+  @Get()
+  async getManyWithPagination(
+    @Query('page') page: number = PAGE,
+    @Query('limit') limit: number = LIMIT,
+  ): Promise<Games[]> {
+    return this.gamesService.getAllGames(page, limit);
   }
 }

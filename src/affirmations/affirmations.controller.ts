@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+
+import { LIMIT, PAGE } from 'src/constants';
 
 import { AffirmationsService } from './affirmations.service';
 import { Affirmation } from './schemas/affirmation.schema';
@@ -13,8 +24,16 @@ export class AffirmationsController {
   }
 
   @Get()
-  async getAllAffirmations() {
-    return this.affirmationsService.getAllAffirmations();
+  async getManyWithPagination(
+    @Query('page', new ParseIntPipe()) page = PAGE,
+    @Query('limit', new ParseIntPipe()) limit = LIMIT,
+  ): Promise<{ data: Affirmation[]; total: number }> {
+    const { data, total } =
+      await this.affirmationsService.getManyAffirmationsWithPagination(
+        page,
+        limit,
+      );
+    return { data, total };
   }
 
   @Patch(':id/publish')

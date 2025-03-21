@@ -12,14 +12,14 @@ export class MockOpenAIService {
     'Every challenge is an opportunity to grow.',
   ];
 
-  private fixedText = 'You are enough just as you are.';
-  private fixedImageUrl = 'https://picsum.photos/1478/1478';
+  private fixedText = ['You are enough just as you are.'];
+  private fixedImageUrl = ['https://picsum.photos/1478/1478'];
 
-  generateAffirmationText(): string {
+  generateAffirmationText(): string[] {
     return this.fixedText;
   }
 
-  generateImage(_prompt: string): string {
+  generateImage(_prompt: string): string[] {
     return this.fixedImageUrl;
   }
 

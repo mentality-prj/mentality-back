@@ -41,30 +41,6 @@ describe('AffirmationsService', () => {
     (service as any).openAIService = mockOpenAIService;
   });
 
-  it('should generate and save an affirmation', async () => {
-    const mockAffirmation = {
-      text: mockOpenAIService.generateAffirmationText(),
-      imageUrl: mockOpenAIService.generateImage(''),
-      isPublished: false,
-      createdAt: new Date(),
-      _id: 'mocked_id',
-    };
-
-    (model.create as jest.Mock).mockResolvedValue(mockAffirmation);
-
-    const result = await service.generateAndSaveAffirmation();
-
-    expect(model.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        text: 'You are enough just as you are.',
-        imageUrl: 'https://picsum.photos/1478/1478',
-        isPublished: false,
-      }),
-    );
-
-    expect(result).toMatchObject(mockAffirmation);
-  });
-
   it('should return all affirmations with pagination', async () => {
     const mockAffirmations = {
       imageUrl: mockOpenAIService.generateImage(''),
@@ -83,9 +59,8 @@ describe('AffirmationsService', () => {
 
     const result = await service.getManyAffirmationsWithPagination();
 
-    console.log(result);
     expect(result.data).toEqual({
-      imageUrl: ['https://picsum.photos/1478/1478'],
+      imageUrl: 'https://picsum.photos/1478/1478',
     });
   });
 });

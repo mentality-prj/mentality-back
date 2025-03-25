@@ -50,7 +50,15 @@ export class AffirmationsController {
   }
 
   @Get()
-  async getAllAffirmations() {
-    return this.affirmationsService.getAllAffirmations();
+  async getManyWithPagination(
+    @Query('page', new ParseIntPipe()) page = PAGE,
+    @Query('limit', new ParseIntPipe()) limit = LIMIT,
+  ): Promise<{ data: Affirmation[]; total: number }> {
+    const { data, total } =
+      await this.affirmationsService.getManyAffirmationsWithPagination(
+        page,
+        limit,
+      );
+    return { data, total };
   }
 }

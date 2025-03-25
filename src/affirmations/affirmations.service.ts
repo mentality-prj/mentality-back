@@ -17,11 +17,13 @@ export class AffirmationsService {
   }
 
   async generateAffirmationText(): Promise<string> {
-    return this.openAIService.generateAffirmationText();
+    const texts = await this.openAIService.generateAffirmationText();
+    return Array.isArray(texts) && texts.length > 0 ? texts[0] : '';
   }
 
   async generateImage(_prompt: string): Promise<string> {
-    return this.openAIService.generateImage(_prompt);
+    const images = await this.openAIService.generateImage(_prompt);
+    return Array.isArray(images) && images.length > 0 ? images[0] : '';
   }
 
   async uploadToCloudinary(imageUrl: string): Promise<string> {
@@ -49,6 +51,7 @@ export class AffirmationsService {
   ): Promise<{ data: Affirmation[]; total: number }> {
     const skip = (page - 1) * limit;
     // Get affirmations while skipping and limiting the results
+
     const affirmations = await this.affirmationModel
       .find()
       .sort({ createdAt: -1 })
@@ -56,6 +59,7 @@ export class AffirmationsService {
       .limit(limit)
       .exec();
     //  Get the total count of affirmations
+
     const total = await this.affirmationModel.countDocuments().exec();
     return { data: affirmations as Affirmation[], total };
   }

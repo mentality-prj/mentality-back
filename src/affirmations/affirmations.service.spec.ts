@@ -27,6 +27,9 @@ describe('AffirmationsService', () => {
               limit: jest.fn().mockReturnThis(),
               exec: jest.fn(),
             }),
+            countDocuments: jest.fn().mockReturnValue({
+              exec: jest.fn(),
+            }),
           },
         },
       ],
@@ -53,24 +56,19 @@ describe('AffirmationsService', () => {
 
     expect(model.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        text: mockAffirmation.text,
-        imageUrl: mockAffirmation.imageUrl,
+        text: 'You are enough just as you are.',
+        imageUrl: 'https://picsum.photos/1478/1478',
+        isPublished: false,
       }),
     );
 
     expect(result).toMatchObject(mockAffirmation);
   });
 
-  it('should return all affirmations', async () => {
-    const mockAffirmations = mockOpenAIService
-      .getMockAffirmations()
-      .map((text, index) => ({
-        _id: `mocked_id_${index}`,
-        text,
-        imageUrl: `https://picsum.photos/200/300?random=${index}`,
-        isPublished: false,
-        createdAt: new Date(),
-      }));
+  it('should return all affirmations with pagination', async () => {
+    const mockAffirmations = {
+      imageUrl: mockOpenAIService.generateImage(''),
+    };
 
     (model.find as jest.Mock).mockReturnValue({
       sort: jest.fn().mockReturnThis(),
@@ -79,8 +77,15 @@ describe('AffirmationsService', () => {
       exec: jest.fn().mockResolvedValue(mockAffirmations),
     });
 
-    const result = await service.getAllAffirmations();
+    (model.countDocuments as jest.Mock).mockReturnValue({
+      exec: jest.fn().mockReturnThis(),
+    });
 
-    expect(result).toEqual(mockAffirmations);
+    const result = await service.getManyAffirmationsWithPagination();
+
+    console.log(result);
+    expect(result.data).toEqual({
+      imageUrl: ['https://picsum.photos/1478/1478'],
+    });
   });
 });

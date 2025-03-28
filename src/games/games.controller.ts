@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { LIMIT, PAGE } from 'src/constants';
@@ -15,7 +24,11 @@ export class GamesController {
 
   //    * Creates a new game and saves it to the database.
   @Post()
-  @ApiResponse({ status: 201, description: 'Game created', type: GamesEntity })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Game created',
+    type: GamesEntity,
+  })
   async createGame(): Promise<Games> {
     return this.gamesService.createGame();
   }
@@ -23,7 +36,11 @@ export class GamesController {
   //    * Retrieves a game by its ID.
   //    * Throws an error if the game is not found.
   @Get(':id')
-  @ApiResponse({ status: 200, description: 'Game found', type: GamesEntity })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Game found',
+    type: GamesEntity,
+  })
   async getGame(@Param('id') id: string): Promise<Games> {
     return this.gamesService.getGameById(id);
   }
@@ -31,7 +48,7 @@ export class GamesController {
   //    * Retrieves all games with pagination.
   @Get('unpublished')
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'Unpublished games',
     type: [GamesEntity],
   })
@@ -42,7 +59,11 @@ export class GamesController {
 
   //    * Updates a game's published status.
   @Put(':id')
-  @ApiResponse({ status: 200, description: 'Game updated', type: GamesEntity })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Game updated',
+    type: GamesEntity,
+  })
   async updateGame(
     @Param('id') id: string,
     @Body('isPublished') isPublished: boolean,
@@ -54,7 +75,7 @@ export class GamesController {
   //    * Retrieves all games with pagination.
   @Get()
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: 'List of games',
     type: [GamesEntity],
   })

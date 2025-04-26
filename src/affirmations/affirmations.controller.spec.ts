@@ -1,6 +1,8 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { LIMIT } from 'src/constants';
+
 import { AffirmationsController } from './affirmations.controller';
 import { AffirmationsService } from './affirmations.service';
 import { Affirmation } from './schemas/affirmation.schema';
@@ -43,11 +45,23 @@ describe('AffirmationsController', () => {
     ];
 
     jest.spyOn(service, 'getManyAffirmationsWithPagination').mockResolvedValue({
-      data: mockAffirmations as Affirmation[],
+      data: mockAffirmations.map((affirmation, index) => ({
+        ...affirmation,
+        id: `mock-id-${index + 1}`,
+        isPublished: true,
+        createdAt: new Date(),
+      })),
       total: mockAffirmations.length,
     });
 
-    const result = await controller.getManyWithPagination(1, 10);
-    expect(result.data).toEqual(mockAffirmations);
+    const result = await controller.getManyWithPagination(1, LIMIT);
+    expect(result.data).toEqual(
+      mockAffirmations.map((affirmation, index) => ({
+        ...affirmation,
+        id: `mock-id-${index + 1}`,
+        isPublished: true,
+        createdAt: expect.any(Date),
+      })),
+    );
   });
 });

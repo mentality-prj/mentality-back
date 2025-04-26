@@ -42,9 +42,9 @@ describe('AffirmationsService', () => {
   });
 
   it('should return all affirmations with pagination', async () => {
-    const mockAffirmations = {
-      imageUrl: mockOpenAIService.generateImage(''),
-    };
+    const mockAffirmations = [
+      { imageUrl: mockOpenAIService.generateImage('') },
+    ];
 
     (model.find as jest.Mock).mockReturnValue({
       sort: jest.fn().mockReturnThis(),
@@ -57,10 +57,29 @@ describe('AffirmationsService', () => {
       exec: jest.fn().mockReturnThis(),
     });
 
+    jest.spyOn(service, 'getManyAffirmationsWithPagination').mockResolvedValue({
+      data: [
+        {
+          id: 'mock-id',
+          text: 'mock-text',
+          isPublished: true,
+          createdAt: new Date(),
+          imageUrl: 'https://picsum.photos/1478/1478',
+        },
+      ],
+      total: 1,
+    });
+
     const result = await service.getManyAffirmationsWithPagination();
 
-    expect(result.data).toEqual({
-      imageUrl: 'https://picsum.photos/1478/1478',
-    });
+    expect(result.data).toEqual([
+      {
+        id: 'mock-id',
+        text: 'mock-text',
+        isPublished: true,
+        createdAt: expect.any(Date),
+        imageUrl: 'https://picsum.photos/1478/1478',
+      },
+    ]);
   });
 });

@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 
 import { LIMIT, PAGE } from 'src/constants';
 
-import { MockOpenAIService } from './__mock__/mock-openai.service';
+import { MockOpenAIService } from '../__mock__/mock-openai.service';
 import { AffirmationEntity } from './entities/affirmation.entity';
 import { AffirmationsMapper } from './helpers/affirmation.mapper';
 import { Affirmation } from './schemas/affirmation.schema';
@@ -26,7 +26,7 @@ export class AffirmationsService {
 
   // Generate an affirmation text
   async generateAffirmationText(): Promise<string> {
-    const texts = await this.openAIService.generateAffirmationText();
+    const texts = await this.openAIService.generateText();
     // Return the first text if it exists
     return Array.isArray(texts) && texts.length > 0 ? texts[0] : '';
   }

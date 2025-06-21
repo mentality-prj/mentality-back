@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import {
-  SUPPORTED_LANGUAGES,
-  SupportedLanguage,
+  SUPPORTED_LANGUAGES_KEYS,
+  SupportedLanguages,
 } from 'src/constants/supported-languages.constant';
 
 @Schema()
@@ -12,14 +12,14 @@ export class Tip extends Document {
     type: Object,
     required: true,
     validate: {
-      validator: (translations: Record<SupportedLanguage, string>) =>
-        Object.keys(translations).every((key: SupportedLanguage) =>
-          SUPPORTED_LANGUAGES.includes(key),
+      validator: (translations: Record<SupportedLanguages, string>) =>
+        Object.keys(translations).every((key: SupportedLanguages) =>
+          SUPPORTED_LANGUAGES_KEYS.includes(key),
         ),
       message: 'Invalid language keys in translations field',
     },
   })
-  translations: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguages, string>;
 
   @Prop({ default: false })
   isPublished: boolean;

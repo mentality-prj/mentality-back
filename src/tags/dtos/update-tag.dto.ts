@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsObject, IsString } from 'class-validator';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+import { SupportedLanguages } from 'src/constants/supported-languages.constant';
 
 export class UpdateTagDto {
   @IsString()
@@ -9,7 +9,7 @@ export class UpdateTagDto {
 
   @IsObject()
   @IsNotEmpty()
-  translations: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguages, string>;
 
   @IsDate()
   @IsNotEmpty()

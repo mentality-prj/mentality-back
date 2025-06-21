@@ -15,7 +15,7 @@ export class MockOpenAIService {
   private fixedText = 'You are enough just as you are.';
   private fixedImageUrl = 'https://picsum.photos/1478/1478';
 
-  generateAffirmationText(): string {
+  generateText(): string {
     return this.fixedText;
   }
 

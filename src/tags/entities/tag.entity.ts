@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+import { SupportedLanguages } from 'src/constants/supported-languages.constant';
 
 export class TagEntity {
   @ApiProperty({
@@ -23,7 +23,7 @@ export class TagEntity {
     },
     description: 'Translations for the tag in supported languages',
   })
-  translations: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguages, string>;
 
   @ApiProperty({
     example: '2024-11-19T14:35:30.742Z',
@@ -59,7 +59,7 @@ export class NewTagEntity {
     },
     description: 'Translations for the tag in various languages',
   })
-  translations: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguages, string>;
 
   @ApiProperty({
     example: '2024-11-19T14:35:30.742Z',

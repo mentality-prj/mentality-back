@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 
 import { AI } from 'src/constants';
 import {
-  SUPPORTED_LANGUAGES,
-  SupportedLanguage,
+  SUPPORTED_LANGUAGES_KEYS,
+  SupportedLanguages,
 } from 'src/constants/supported-languages.constant';
 import { defaultPrompts } from 'src/constants/tips/prompts';
 import { HuggingFaceService } from 'src/huggingface/huggingface.service';
@@ -25,17 +25,18 @@ export class TipsService {
     private readonly huggingFaceService: HuggingFaceService,
   ) {}
 
+  // TODO: REMOVE IT TO TRANSLATION SERVICE
   // Generate translations for the content
   async getTranslations(
     content: string,
-    lang: SupportedLanguage,
+    lang: SupportedLanguages,
   ): Promise<TipEntity['translations']> {
     // Translate content to the required language
     const translations: TipEntity['translations'] =
       {} as TipEntity['translations'];
 
     await Promise.all(
-      SUPPORTED_LANGUAGES.map(async (targetLang: SupportedLanguage) => {
+      SUPPORTED_LANGUAGES_KEYS.map(async (targetLang: SupportedLanguages) => {
         const translatedContent =
           lang === targetLang
             ? content // If the language is already correct, do not translate

@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 
 import { DEFAULT_DELAY, LONG_DELAY } from 'src/constants';
 import { generateModel, translateModelMap } from 'src/constants/huggingface';
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+import { SupportedLanguages } from 'src/constants/supported-languages.constant';
 
 @Injectable()
 export class HuggingFaceService {
@@ -70,7 +70,7 @@ export class HuggingFaceService {
   // Text translation
   async translateText(
     text: string,
-    targetLang: SupportedLanguage,
+    targetLang: SupportedLanguages,
   ): Promise<string> {
     const modelMap = translateModelMap;
 

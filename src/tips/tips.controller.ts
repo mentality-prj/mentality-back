@@ -19,6 +19,7 @@ import { GenerateTipDto } from './dtos/generate-tip.dto';
 import { UpdateTipDto } from './dtos/update-tip.dto';
 import { NewTipEntity, TipEntity } from './entities/tip.entity';
 import { TipsService } from './tips.service';
+
 @ApiTags('Tips')
 @Controller('tips')
 export class TipsController {
@@ -40,7 +41,7 @@ export class TipsController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Generate a new tip' })
+  @ApiOperation({ summary: 'Update an existing tip' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Tip successfully updated.',
@@ -54,11 +55,13 @@ export class TipsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete an existing tip by ID' })
   async deleteOneById(@Param('id') id: string): Promise<boolean> {
     return this.tipsService.deleteTipById(id);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get tips with pagination' })
   async getManyWithPagination(
     @Query('page', new ParseIntPipe()) page = PAGE,
     @Query('limit', new ParseIntPipe()) limit = LIMIT,
@@ -70,7 +73,8 @@ export class TipsController {
     return { data, total };
   }
 
-  @Get()
+  @Get('unpublished')
+  @ApiOperation({ summary: 'Get all unpublished tips' })
   async getAllUnpublished() {
     const unpublishedTips = await this.tipsService.getAllUnpublishedTips();
     return unpublishedTips;

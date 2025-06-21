@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+import { SupportedLanguages } from 'src/constants/supported-languages.constant';
 
 export class NewTipEntity {
   @ApiProperty({
@@ -23,7 +23,7 @@ export class NewTipEntity {
     },
     description: 'Translations for the tip in various languages',
   })
-  translations: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguages, string>;
 
   @ApiProperty({
     example: '2024-11-19T14:35:30.742Z',

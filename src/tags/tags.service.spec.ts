@@ -1,7 +1,7 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { SupportedLanguage } from 'src/constants/supported-languages.constant';
+import { SupportedLanguages } from 'src/constants/supported-languages.constant';
 
 import { Tag } from './schemas/tag.schema';
 import { TagsService } from './tags.service';
@@ -41,7 +41,7 @@ describe('TagsService', () => {
     create: jest.fn(
       (dto: {
         key: string;
-        translations: Record<SupportedLanguage, string>;
+        translations: Record<SupportedLanguages, string>;
       }) => ({
         _id: '2',
         ...dto,

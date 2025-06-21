@@ -2,8 +2,8 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
 
-import { MockOpenAIService } from './__mock__/mock-openai.service';
 import { AffirmationsService } from './affirmations.service';
+import { MockOpenAIService } from '../__mock__/mock-openai.service';
 import { Affirmation } from './schemas/affirmation.schema';
 
 describe('AffirmationsService', () => {

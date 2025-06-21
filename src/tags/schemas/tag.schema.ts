@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 import {
-  SUPPORTED_LANGUAGES,
-  SupportedLanguage,
+  SUPPORTED_LANGUAGES_KEYS,
+  SupportedLanguages,
 } from 'src/constants/supported-languages.constant';
 
 @Schema()
@@ -15,14 +15,14 @@ export class Tag extends Document {
     type: Object,
     required: true,
     validate: {
-      validator: (name: Record<SupportedLanguage, string>) =>
-        Object.keys(name).every((key: SupportedLanguage) =>
-          SUPPORTED_LANGUAGES.includes(key),
+      validator: (name: Record<SupportedLanguages, string>) =>
+        Object.keys(name).every((key: SupportedLanguages) =>
+          SUPPORTED_LANGUAGES_KEYS.includes(key),
         ),
-      message: 'Invalid language keys in name field',
+      message: 'Invalid language keys in translations field',
     },
   })
-  translations: Record<SupportedLanguage, string>;
+  translations: Record<SupportedLanguages, string>;
 
   @Prop({ default: Date.now })
   createdAt: Date;

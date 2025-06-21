@@ -19,7 +19,7 @@ export class Tag extends Document {
         Object.keys(name).every((key: SupportedLanguages) =>
           SUPPORTED_LANGUAGES_KEYS.includes(key),
         ),
-      message: 'Invalid language keys in name field',
+      message: 'Invalid language keys in translations field',
     },
   })
   translations: Record<SupportedLanguages, string>;

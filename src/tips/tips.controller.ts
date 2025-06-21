@@ -74,7 +74,7 @@ export class TipsController {
   }
 
   @Get('unpublished')
-  @ApiOperation({ summary: 'Get all unpablished tips' })
+  @ApiOperation({ summary: 'Get all unpublished tips' })
   async getAllUnpublished() {
     const unpublishedTips = await this.tipsService.getAllUnpublishedTips();
     return unpublishedTips;

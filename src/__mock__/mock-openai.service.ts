@@ -15,8 +15,8 @@ export class MockOpenAIService {
   private fixedText = 'You are enough just as you are.';
   private fixedImageUrl = 'https://picsum.photos/1478/1478';
 
-  generateText(): string {
-    return this.fixedText;
+  generateText(): string[] {
+    return [this.fixedText];
   }
 
   generateImage(_prompt: string): string {

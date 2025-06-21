@@ -6,15 +6,9 @@ export class MockHuggingFaceService {
       en: { example: 'Sample text translated to English.' },
     };
 
-    const languageTranslations = translations['uk'];
-    if (
-      languageTranslations &&
-      Object.prototype.hasOwnProperty.call(languageTranslations, targetLanguage)
-    ) {
-      if (['pl', 'en'].includes(targetLanguage)) {
-        return languageTranslations[`${targetLanguage}`];
-      }
-      return 'Translation not available.';
+    const languageTranslations = translations[targetLanguage];
+    if (languageTranslations) {
+      return languageTranslations.example || 'Translation not available.';
     }
     return 'Translation not available.';
   }

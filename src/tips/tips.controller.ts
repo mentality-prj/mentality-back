@@ -39,27 +39,6 @@ export class TipsController {
     return this.tipsService.generateTip(generateTipDto, AI.OpenAI);
   }
 
-  @Patch(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Update an existing tip' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Tip successfully updated.',
-    type: TipEntity,
-  })
-  async update(
-    @Param('id') id: string,
-    @Body() payload: UpdateTipDto,
-  ): Promise<TipEntity> {
-    return this.tipsService.updateTip(id, payload);
-  }
-
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete an existing tip by ID' })
-  async deleteOneById(@Param('id') id: string): Promise<boolean> {
-    return this.tipsService.deleteTipById(id);
-  }
-
   @Get()
   @ApiOperation({ summary: 'Get tips with pagination' })
   async getManyWithPagination(
@@ -78,5 +57,27 @@ export class TipsController {
   async getAllUnpublished() {
     const unpublishedTips = await this.tipsService.getAllUnpublishedTips();
     return unpublishedTips;
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update an existing tip' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Tip successfully updated.',
+    type: TipEntity,
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() payload: UpdateTipDto,
+  ): Promise<TipEntity> {
+    return this.tipsService.updateTip(id, payload);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Delete an existing tip by ID' })
+  async deleteOneById(@Param('id') id: string): Promise<boolean> {
+    return this.tipsService.deleteTipById(id);
   }
 }

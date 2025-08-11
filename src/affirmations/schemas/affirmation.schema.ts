@@ -4,7 +4,11 @@ import { Document } from 'mongoose';
 @Schema({ timestamps: false, versionKey: false })
 export class Affirmation extends Document {
   @Prop({ required: true })
-  text: string;
+  translations: {
+    en: string;
+    pl: string;
+    uk: string;
+  };
 
   @Prop({ required: true })
   imageUrl: string;

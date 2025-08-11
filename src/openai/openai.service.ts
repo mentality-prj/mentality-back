@@ -52,4 +52,40 @@ export class OpenaiService {
       return 'No tip generated.';
     }
   }
+
+  // Generate an affirmation based on the given prompt
+  async generateAffirmation(prompt: string): Promise<string> {
+    try {
+      const affirmationResponse = await this.openai.chat.completions.create({
+        model: chatGPTmodel,
+        messages: [{ role: Roles.USER, content: prompt }],
+        max_tokens: 100,
+      });
+      const affirmation =
+        affirmationResponse.choices[0]?.message.content.trim() || '';
+      console.log(`Generated affirmation: ${affirmation}`);
+      return affirmation;
+    } catch (error) {
+      console.error(`Error generating affirmation:`, error);
+      return 'No affirmation generated.';
+    }
+  }
+
+  // Generate an image using OpenAI's image generation API
+  async generateImage(prompt: string): Promise<string> {
+    try {
+      // If using OpenAI's DALL·E API
+      const response = await this.openai.images.generate({
+        prompt,
+        n: 1,
+        size: '1024x1024',
+      });
+      const imageUrl = response.data[0]?.url || '';
+      console.log(`Generated image URL: ${imageUrl}`);
+      return imageUrl;
+    } catch (error) {
+      console.error('Error generating image:', error);
+      return '';
+    }
+  }
 }

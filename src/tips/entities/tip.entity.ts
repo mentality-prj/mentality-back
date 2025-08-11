@@ -17,9 +17,9 @@ export class NewTipEntity {
 
   @ApiProperty({
     example: {
-      en: 'Cleaning',
-      uk: 'Прибирання',
-      pl: 'Sprzątanie',
+      en: 'Take a short walk to clear your mind.',
+      uk: 'Зробіть коротку прогулянку, щоб освіжити думки.',
+      pl: 'Wybierz się na krótki spacer, aby oczyścić umysł.',
     },
     description: 'Translations for the tip in various languages',
   })

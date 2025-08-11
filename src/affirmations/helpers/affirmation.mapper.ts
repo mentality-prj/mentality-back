@@ -6,7 +6,11 @@ export class AffirmationsMapper {
   static toAffirmationEntity(affirmation: Affirmation): AffirmationEntity {
     return {
       id: affirmation.id.toString(),
-      text: affirmation.text,
+      translations: {
+        en: affirmation.translations?.en,
+        pl: affirmation.translations?.pl,
+        uk: affirmation.translations?.uk,
+      },
       createdAt: affirmation.createdAt,
       imageUrl: affirmation.imageUrl,
       isPublished: affirmation.isPublished,

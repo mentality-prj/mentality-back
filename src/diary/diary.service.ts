@@ -39,4 +39,5 @@ export class DiaryService {
       .exec();
     if (!diary) throw new NotFoundException('Diary entry not found');
     return diary;
+  }
 }

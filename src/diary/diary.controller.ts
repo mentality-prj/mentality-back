@@ -32,7 +32,7 @@ export class DiaryController {
     return this.diaryService.update(id, updateDiaryDto);
   }
 
-  @Post('activate/:id')
+  @Patch(':id/activate')
   async activate(@Param('id') id: string): Promise<Diary> {
     return this.diaryService.activate(id);
   }

@@ -3,13 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { AI } from 'src/constants';
-import {
-  SUPPORTED_LANGUAGES_KEYS,
-  SupportedLanguages,
-} from 'src/constants/supported-languages.constant';
 import { defaultPrompts } from 'src/constants/tips/prompts';
 import { HuggingFaceService } from 'src/huggingface/huggingface.service';
 import { OpenaiService } from 'src/openai/openai.service';
+import { TranslationsService } from 'src/translations/translations.service';
 import { AIType } from 'src/types';
 
 import { GenerateTipDto, UpdateTipDto } from './dtos';
@@ -23,30 +20,8 @@ export class TipsService {
     @InjectModel('Tip') private tipModel: Model<Tip>,
     private readonly openaiService: OpenaiService,
     private readonly huggingFaceService: HuggingFaceService,
+    private readonly translationsService: TranslationsService,
   ) {}
-
-  // TODO: REMOVE IT TO TRANSLATION SERVICE
-  // Generate translations for the content
-  async getTranslations(
-    content: string,
-    lang: SupportedLanguages,
-  ): Promise<TipEntity['translations']> {
-    // Translate content to the required language
-    const translations: TipEntity['translations'] =
-      {} as TipEntity['translations'];
-
-    await Promise.all(
-      SUPPORTED_LANGUAGES_KEYS.map(async (targetLang: SupportedLanguages) => {
-        const translatedContent =
-          lang === targetLang
-            ? content // If the language is already correct, do not translate
-            : await this.huggingFaceService.translateText(content, targetLang);
-        translations[`${targetLang}`] = translatedContent;
-      }),
-    );
-
-    return translations;
-  }
 
   // Save the new Tip to the database
   async saveTip(translations: TipEntity['translations']): Promise<TipEntity> {
@@ -88,7 +63,10 @@ export class TipsService {
       // Generate content using OpenAI
       const content = await this.openaiService.generateTip(prompt);
 
-      const translationsMap = await this.getTranslations(content, lang);
+      const translationsMap = await this.translationsService.getTranslations(
+        content,
+        lang,
+      );
 
       // Save the new Tip to the database
       const newTip = await this.saveTip(translationsMap);
@@ -112,7 +90,10 @@ export class TipsService {
       // Generate content based on the prompt
       const content = await this.huggingFaceService.generateText(prompt);
 
-      const translationsMap = await this.getTranslations(content, lang);
+      const translationsMap = await this.translationsService.getTranslations(
+        content,
+        lang,
+      );
 
       // Save the new Tip to the database
       const newTip = await this.saveTip(translationsMap);

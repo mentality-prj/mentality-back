@@ -3,12 +3,8 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: false, versionKey: false })
 export class Affirmation extends Document {
-  @Prop({ required: true })
-  translations: {
-    en: string;
-    pl: string;
-    uk: string;
-  };
+  @Prop({ type: Object, required: true })
+  translations: Record<string, string>;
 
   @Prop({ required: true })
   imageUrl: string;

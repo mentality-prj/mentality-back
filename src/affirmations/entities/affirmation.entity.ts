@@ -38,10 +38,10 @@ export class NewAffirmationEntity {
   createdAt: Date;
 }
 
-export class AffirmationEntity extends NewAffirmationEntity {
-  @ApiProperty({
-    example: '2024-11-20T14:35:30.742Z',
-    description: 'The date when the affirmation was last updated',
-  })
-  updatedAt?: Date;
+export class AffirmationEntity {
+  id: string;
+  translations: Record<SupportedLanguages, string>;
+  isPublished: boolean;
+  imageUrl: string;
+  createdAt: Date;
 }

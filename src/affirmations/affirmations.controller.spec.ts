@@ -80,69 +80,54 @@ describe('AffirmationsController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('generateAffirmation', () => {
-    it('should generate a new affirmation', async () => {
-      const dto: GenerateAffirmationDto = { prompt: 'Be positive', lang: 'en' };
-      const result = await controller.generateAffirmation(dto);
-      expect(result).toEqual(mockAffirmation);
-      expect(service.generateAffirmation).toHaveBeenCalledWith(
-        dto,
-        expect.anything(),
-      );
-    });
+  it('should generate a new affirmation', async () => {
+    const dto: GenerateAffirmationDto = { prompt: 'Be positive', lang: 'en' };
+    const result = await controller.generateAffirmation(dto);
+    expect(result).toEqual(mockAffirmation);
+    expect(service.generateAffirmation).toHaveBeenCalledWith(dto);
   });
 
-  describe('getManyWithPagination', () => {
-    const PAGE = 1;
-    const PAGE_SIZE = 10;
-    it('should return affirmations with pagination', async () => {
-      const result = await controller.getManyWithPagination(PAGE, PAGE_SIZE);
-      expect(result).toEqual({ data: mockAffirmations, total: 2 });
-      expect(service.getManyAffirmationsWithPagination).toHaveBeenCalledWith(
-        PAGE,
-        PAGE_SIZE,
-      );
-    });
+  const PAGE = 1;
+  const PAGE_SIZE = 10;
+  it('should return affirmations with pagination', async () => {
+    const result = await controller.getManyWithPagination(PAGE, PAGE_SIZE);
+    expect(result).toEqual({ data: mockAffirmations, total: 2 });
+    expect(service.getManyAffirmationsWithPagination).toHaveBeenCalledWith(
+      PAGE,
+      PAGE_SIZE,
+    );
   });
 
-  describe('getAllUnpublishedAffirmations', () => {
-    it('should return all unpublished affirmations', async () => {
-      const result = await controller.getAllUnpublishedAffirmations();
-      expect(result).toEqual([mockNewAffirmation]);
-      expect(service.getAllUnpublishedAffirmations).toHaveBeenCalled();
-    });
+  it('should return all unpublished affirmations', async () => {
+    const result = await controller.getAllUnpublishedAffirmations();
+    expect(result).toEqual([mockNewAffirmation]);
+    expect(service.getAllUnpublishedAffirmations).toHaveBeenCalled();
   });
 
-  describe('updateAffirmation', () => {
-    it('should update an affirmation', async () => {
-      const dto: UpdateAffirmationDto = {
-        translations: {
-          en: 'Updated text',
-          uk: 'Оновлений текст',
-          pl: 'Zaktualizowany tekst',
-        },
-        isPublished: true,
-      };
-      const result = await controller.updateAffirmation('1', dto);
-      expect(result).toEqual(mockAffirmation);
-      expect(service.updateAffirmation).toHaveBeenCalledWith('1', dto);
-    });
+  it('should update an affirmation', async () => {
+    const dto: UpdateAffirmationDto = {
+      translations: {
+        en: 'Updated text',
+        uk: 'Оновлений текст',
+        pl: 'Zaktualizowany tekst',
+      },
+      isPublished: true,
+    };
+    const result = await controller.updateAffirmation('1', dto);
+    expect(result).toEqual(mockAffirmation);
+    expect(service.updateAffirmation).toHaveBeenCalledWith('1', dto);
   });
 
-  describe('deleteAffirmationById', () => {
-    it('should delete an affirmation by id', async () => {
-      const result = await controller.deleteAffirmationById('1');
-      expect(result).toEqual({ success: true });
-      expect(service.deleteAffirmationById).toHaveBeenCalledWith('1');
-    });
+  it('should delete an affirmation by id', async () => {
+    const result = await controller.deleteAffirmationById('1');
+    expect(result).toEqual({ success: true });
+    expect(service.deleteAffirmationById).toHaveBeenCalledWith('1');
   });
 
-  describe('generateImage', () => {
-    it('should generate an image for affirmation prompt', async () => {
-      const dto: GenerateAffirmationDto = { prompt: 'Be creative', lang: 'en' };
-      const result = await controller.generateImage(dto);
-      expect(result).toEqual({ imageUrl: 'http://image.url' });
-      expect(service.generateImage).toHaveBeenCalledWith(dto);
-    });
+  it('should generate an image for affirmation prompt', async () => {
+    const prompt = 'Be creative';
+    const result = await controller.generateImage(prompt);
+    expect(result).toEqual({ imageUrl: 'http://image.url' });
+    expect(service.generateImage).toHaveBeenCalledWith(prompt);
   });
 });

@@ -1,13 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { v2 as cloudinary } from 'cloudinary';
 import { Model } from 'mongoose';
 
-import { AI } from 'src/constants';
-import { defaultAffirmationPrompts } from 'src/constants/affirmations/prompts';
+import {
+  defaultAffirmationImagePrompt,
+  defaultAffirmationPrompts,
+} from 'src/constants/affirmations/prompts';
+import { SUPPORTED_LANGUAGES } from 'src/constants/supported-languages.constant';
 import { HuggingFaceService } from 'src/huggingface/huggingface.service';
 import { OpenaiService } from 'src/openai/openai.service';
 import { TranslationsService } from 'src/translations/translations.service';
-import { AIType } from 'src/types';
 
 import { GenerateAffirmationDto, UpdateAffirmationDto } from './dtos';
 import { AffirmationEntity } from './entities/affirmation.entity';
@@ -23,31 +26,58 @@ export class AffirmationsService {
     private readonly translationsService: TranslationsService,
   ) {}
 
-  async saveAffirmation(
-    translations: AffirmationEntity['translations'],
-  ): Promise<AffirmationEntity> {
+  async saveAffirmation({
+    translations,
+    cloudinaryUrl,
+  }: {
+    translations: AffirmationEntity['translations'];
+    cloudinaryUrl: string;
+  }): Promise<AffirmationEntity> {
     const newAffirmation = new this.affirmationModel({
       translations: translations,
       createdAt: new Date(),
-      isPublished: false,
+      imageUrl: cloudinaryUrl,
     });
     await newAffirmation.save();
     return AffirmationsMapper.toAffirmationEntity(newAffirmation);
   }
 
+  async uploadToCloudinary(imageUrl: string): Promise<string> {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
+
+    try {
+      const result = await cloudinary.uploader.upload(imageUrl, {
+        folder: 'affirmations',
+      });
+      return result.secure_url;
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      throw new Error('Failed to upload image to Cloudinary.');
+    }
+  }
+
   async generateAffirmation(
     generateAffirmationDto: GenerateAffirmationDto,
-    service: AIType,
   ): Promise<AffirmationEntity> {
     const { prompt, lang } = generateAffirmationDto;
     const _prompt = prompt || defaultAffirmationPrompts[`${lang}`];
 
-    if (service === AI.OpenAI) {
-      return this.generateAffirmationWithOpenAI({ prompt: _prompt, lang });
-      // } else if (service === AI.HuggingFace) {
-      //   return this.generateAffirmationWithHuggingFace({ prompt: _prompt, lang });
-    } else {
-      throw new Error('Unsupported service');
+    return this.generateAffirmationWithOpenAI({ prompt: _prompt, lang });
+  }
+
+  async generateImage(prompt: string): Promise<string> {
+    const safePrompt = prompt || defaultAffirmationImagePrompt;
+
+    try {
+      const imageUrl = await this.openaiService.generateImage(safePrompt);
+      return imageUrl;
+    } catch (error) {
+      console.error('Error generating image:', error);
+      throw new Error('Failed to generate image. Please try again later.');
     }
   }
 
@@ -64,7 +94,18 @@ export class AffirmationsService {
         lang,
       );
 
-      const newAffirmation = await this.saveAffirmation(translationsMap);
+      const imagePrompt =
+        lang !== SUPPORTED_LANGUAGES.ENG
+          ? translationsMap[SUPPORTED_LANGUAGES.ENG]
+          : content;
+
+      const imageUrl = await this.generateImage(imagePrompt);
+      const cloudinaryUrl = await this.uploadToCloudinary(imageUrl);
+
+      const newAffirmation = await this.saveAffirmation({
+        translations: translationsMap,
+        cloudinaryUrl,
+      });
 
       return newAffirmation;
     } catch (error) {
@@ -112,7 +153,6 @@ export class AffirmationsService {
         { new: true },
       )
       .exec();
-
     if (!updatedAffirmation) {
       throw new NotFoundException('Affirmation not found');
     }
@@ -130,23 +170,11 @@ export class AffirmationsService {
     return true;
   }
 
-  async generateImage(
-    generateAffirmationDto: GenerateAffirmationDto,
-  ): Promise<string> {
-    const { prompt, lang } = generateAffirmationDto;
-    const _prompt = prompt || defaultAffirmationPrompts[`${lang}`];
-
-    try {
-      // Assuming OpenaiService has a method generateImage(prompt: string): Promise<string>
-      const imageUrl = await this.openaiService.generateImage(_prompt);
-      return imageUrl;
-    } catch (error) {
-      console.error('Error generating image:', error);
-      throw new Error('Failed to generate image. Please try again later.');
-    }
-  }
-
-  async getAllAffirmations(): Promise<Affirmation[]> {
-    return this.affirmationModel.find().sort({ createdAt: -1 }).exec();
+  async getAllAffirmations(): Promise<AffirmationEntity[]> {
+    const affirmations = await this.affirmationModel
+      .find()
+      .sort({ createdAt: -1 })
+      .exec();
+    return affirmations.map(AffirmationsMapper.toAffirmationEntity);
   }
 }

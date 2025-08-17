@@ -2,14 +2,14 @@ import { TipEntity } from '../entities/tip.entity';
 import { Tip } from '../schemas/tip.schema';
 
 export class TipsMapper {
-  static toTipEntity(tip: Tip): TipEntity {
+  static toTipEntity(doc: Tip): TipEntity {
     return {
-      id: tip._id.toString(),
-      isPublished: tip.isPublished,
-      translations: tip.translations,
-      createdAt: tip.createdAt,
-      ...(tip.updatedAt && tip.updatedAt !== tip.createdAt
-        ? { updatedAt: tip.updatedAt }
+      id: doc._id.toString(),
+      isPublished: doc.isPublished,
+      translations: doc.translations,
+      createdAt: doc.createdAt,
+      ...(doc.updatedAt && doc.updatedAt !== doc.createdAt
+        ? { updatedAt: doc.updatedAt }
         : {}),
     };
   }

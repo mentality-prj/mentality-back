@@ -17,6 +17,9 @@ export class Diary extends Document {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt: Date;
 }
 
 export const DiarySchema = SchemaFactory.createForClass(Diary);

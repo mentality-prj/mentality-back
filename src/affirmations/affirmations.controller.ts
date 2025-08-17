@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AI, LIMIT, PAGE } from 'src/constants';
+import { LIMIT, PAGE } from 'src/constants';
 
 import { AffirmationsService } from './affirmations.service';
 import { GenerateAffirmationDto, UpdateAffirmationDto } from './dtos';
@@ -38,10 +38,7 @@ export class AffirmationsController {
   async generateAffirmation(
     @Body() generateAffirmationDto: GenerateAffirmationDto,
   ): Promise<AffirmationEntity> {
-    return this.affirmationsService.generateAffirmation(
-      generateAffirmationDto,
-      AI.OpenAI,
-    );
+    return this.affirmationsService.generateAffirmation(generateAffirmationDto);
   }
 
   @Get()
@@ -94,12 +91,18 @@ export class AffirmationsController {
     status: HttpStatus.CREATED,
     description: 'Generated image URL',
   })
-  async generateImage(
-    @Body() generateAffirmationDto: GenerateAffirmationDto,
-  ): Promise<{ imageUrl: string }> {
-    const imageUrl = await this.affirmationsService.generateImage(
-      generateAffirmationDto,
-    );
+  async generateImage(@Body() prompt: string): Promise<{ imageUrl: string }> {
+    const imageUrl = await this.affirmationsService.generateImage(prompt);
     return { imageUrl };
+  }
+
+  @Patch(':id/publish')
+  async publishAffirmation(
+    @Param('id') id: string,
+    @Body() body: { isPublished: boolean },
+  ): Promise<AffirmationEntity> {
+    return this.affirmationsService.updateAffirmation(id, {
+      isPublished: body.isPublished,
+    });
   }
 }

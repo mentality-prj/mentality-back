@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { OpenaiService } from './openai.service';
 
+process.env.OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'test-api-key';
+
 describe('OpenaiService', () => {
   let service: OpenaiService;
 

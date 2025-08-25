@@ -5,16 +5,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AffirmationsModule } from './affirmations/affirmations.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ArticlesController } from './articles/articles.controller';
-import { AuthController } from './auth/auth.controller';
+import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
+import { DiaryModule } from './diary/diary.module';
+import { HuggingFaceService } from './huggingface/huggingface.service';
+import { MoodRecordModule } from './mood-record/mood-record.module';
 import { OpenaiService } from './openai/openai.service';
-import { Tag, TagSchema } from './tags/schemas/tag.schema';
 import { TagsModule } from './tags/tags.module';
-import { Tip, TipSchema } from './tips/schemas/tip.schema';
 import { TipsModule } from './tips/tips.module';
-import { User, UserSchema } from './users/schemas/user.schema';
-import { UsersController } from './users/users.controller';
+import { TranslationsService } from './translations/translations.service';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
 
@@ -28,23 +27,22 @@ import { UsersService } from './users/users.service';
       }),
       inject: [ConfigService],
     }),
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-      { name: Tag.name, schema: TagSchema },
-      { name: Tip.name, schema: TipSchema },
-    ]),
     AuthModule,
     UsersModule,
+    AffirmationsModule,
+    ArticlesModule,
+    DiaryModule,
     TagsModule,
     TipsModule,
-    AffirmationsModule,
+    MoodRecordModule,
   ],
-  controllers: [
-    AppController,
-    AuthController,
-    UsersController,
-    ArticlesController,
+  controllers: [AppController],
+  providers: [
+    AppService,
+    OpenaiService,
+    HuggingFaceService,
+    UsersService,
+    TranslationsService,
   ],
-  providers: [AppService, OpenaiService, UsersService],
 })
 export class AppModule {}
